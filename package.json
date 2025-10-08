@@ -12,8 +12,7 @@
     "type-check": "tsc --skipLibCheck true --noEmit",
     "type-check:full": "tsc --skipLibCheck false --noEmit",
     "clean": "git clean -xdf node_modules dist .next",
-    "prepare": "husky",
-    "lint-staged": "lint-staged"
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
