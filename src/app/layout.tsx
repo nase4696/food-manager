@@ -58,7 +58,7 @@ export default async function RootLayout({
           "flex flex-col min-h-screen",
           fontInter.variable,
           fontMontserrat.variable,
-          "font-sans"
+          "font-sans",
         )}
       >
         <main className="flex-1">{children}</main>
