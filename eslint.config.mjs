@@ -59,6 +59,7 @@ const eslintConfig = [
       "*.config.js",
       "next-env.d.ts",
       "**/.next/**",
+      "generated/**",
     ],
   },
   eslintConfigPrettier,
