@@ -9,6 +9,8 @@ on:
 jobs:
   quality-checks:
     runs-on: ubuntu-latest
+    env:
+      SKIP_ENV_VALIDATION: "true" #テスト環境変数設定後に削除
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

@@ -12,7 +12,7 @@ export const env = createEnv({
     // Supabase関連
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
 
-    // その他必要な環境変数を追加
+    // その他必要な環境変数
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
