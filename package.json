@@ -15,7 +15,7 @@
     "prepare": "husky",
     "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev --name init",
     "db:studio": "prisma studio",
-    "validate:prisma:dev": "prisma validate"
+    "validate:prisma:dev": "dotenv -e .env.local -- prisma validate"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
