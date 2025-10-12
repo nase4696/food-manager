@@ -27,7 +27,7 @@
     ],
     "*.prisma": [
       "prisma format",
-      "npm run validate:prisma:dev"
+      "dotenv -e .env.local -- prisma validate"
     ]
   },
   "dependencies": {
