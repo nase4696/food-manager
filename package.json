@@ -25,7 +25,7 @@
     "*.{json,css,md}": [
       "prettier --write"
     ],
-    "*.prisma": [
+    "**/*.prisma": [
       "prisma format",
       "dotenv -e .env.local -- prisma validate"
     ]
