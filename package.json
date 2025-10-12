@@ -27,7 +27,7 @@
     ],
     "*.prisma": [
       "prisma format",
-      "npm run validate:prisma:dev"
+      "npm run validate:prisma:dev --verbose"
     ]
   },
   "dependencies": {
