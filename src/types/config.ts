@@ -23,3 +23,11 @@ export type SiteConfig = {
     github: string;
   };
 };
+
+export type CategoryConfig = {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  defaultExpiryDays: number;
+};
