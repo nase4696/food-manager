@@ -2,10 +2,10 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 
 import { FlatCompat } from "@eslint/eslintrc";
+import eslintConfigPrettier from "eslint-config-prettier";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
-import eslintConfigPrettier from "eslint-config-prettier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -44,6 +44,14 @@ const eslintConfig = [
     plugins: {
       react: reactPlugin,
       "react-hooks": reactHooksPlugin,
+    },
+    settings: {
+      "import/resolver": {
+        typescript: {
+          project: "./tsconfig.json",
+          alwaysTryTypes: true,
+        },
+      },
     },
     rules: {
       "react/jsx-sort-props": "error",
