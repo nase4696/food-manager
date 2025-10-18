@@ -23,7 +23,14 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.title}`,
   },
   description: siteConfig.description,
-  keywords: ["Next.js", "React", "TailwindCSS", "supabase", "ポートフォリオ"],
+  keywords: [
+    "食品管理",
+    "賞味期限",
+    "在庫管理",
+    "食費削減",
+    "食品ロス削減",
+    "冷蔵庫管理",
+  ],
   authors: [
     {
       name: siteConfig.name,
@@ -55,13 +62,13 @@ export default async function RootLayout({
     <html className="min-h-screen" lang="ja" suppressHydrationWarning>
       <body
         className={cn(
-          "flex flex-col min-h-screen",
+          "min-h-screen",
           fontInter.variable,
           fontMontserrat.variable,
           "font-sans",
         )}
       >
-        <main className="flex-1">{children}</main>
+        {children}
       </body>
     </html>
   );
