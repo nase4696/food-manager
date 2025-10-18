@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "type-check": "tsc --skipLibCheck true --noEmit",
-    "type-check:full": "tsc --skipLibCheck false --noEmit",
+    "type-check:full": "tsc --skipLibCheck true --noEmit",
     "clean": "git clean -xdf node_modules dist .next",
     "prepare": "husky",
     "migrate:dev": "dotenv -e .env.local -- npx prisma migrate dev --name init",

@@ -25,6 +25,7 @@ jobs:
         run: npm ci
 
       - name: Run TypeScript check
+        #   next-authが安定版になったらライブラリチェックを有効にする
         run: npm run type-check:full
 
       - name: Run ESLint

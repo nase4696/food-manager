@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
-import { type NextAuthConfig, type User } from "next-auth";
-import type { JWT } from "next-auth/jwt";
+import { type NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import GitHub from "next-auth/providers/github";
@@ -10,7 +9,7 @@ import { env } from "@/env";
 import { prisma } from "../prisma";
 
 export const authConfig = {
-  secret: process.env.AUTH_SECRET,
+  secret: env.AUTH_SECRET,
   providers: [
     Google({
       clientId: env.AUTH_GOOGLE_ID,
@@ -37,8 +36,6 @@ export const authConfig = {
           throw new Error("正しいメールアドレスとパスワードを入力してください");
         }
 
-        if (!credentials) return null;
-
         const { email, password } = credentials;
         const user = await prisma.user.findUnique({
           omit: { password: false },
@@ -59,7 +56,7 @@ export const authConfig = {
   trustHost: true,
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider === "google") {
+      if (account?.provider === "google" || account?.provider === "github") {
         return true;
       }
 
@@ -78,21 +75,18 @@ export const authConfig = {
 
       return true;
     },
-    async jwt({ token, user }: { token: JWT; user: User }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.backendToken = user.backendToken;
-        token.user = user;
+        token.id = user.id;
       }
-
       return token;
     },
     async session({ token, session }) {
-      if (token?.sub) {
+      if (token.id) {
+        session.user.id = token.id;
+      } else if (token.sub) {
         session.user.id = token.sub;
       }
-      session.backendToken = token.backendToken;
-      session.user = token.user;
-
       return session;
     },
   },
