@@ -1,7 +1,7 @@
 import { hash } from "bcryptjs";
 
 import { categoriesConfig, CATEGORY_IDS } from "@/config/categories";
-import { prisma } from "@/lib/prisma/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function seeding(): Promise<
   | {
@@ -259,7 +259,6 @@ export async function seeding(): Promise<
   }
 }
 
-// メイン実行関数
 async function main() {
   const result = await seeding();
 
