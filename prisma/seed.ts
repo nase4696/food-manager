@@ -1,6 +1,6 @@
 import { hash } from "bcryptjs";
 
-import { categoriesConfig, CATEGORY_IDS } from "@/config/categories";
+import { categoriesConfig, CATEGORY_IDS } from "@/constants/categories";
 import { prisma } from "@/lib/prisma";
 
 export async function seeding(): Promise<
