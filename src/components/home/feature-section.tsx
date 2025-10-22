@@ -10,7 +10,7 @@ export function FeatureSection() {
         <SimpleFeatures />
       </div>
 
-      <div className="mt-8 md:mt-16 space-y-12 md:space-y-20">
+      <div className="mt-8 space-y-12 md:space-y-20">
         {DETAILED_FEATURES.map((feature) => (
           <div
             className="scroll-mt-20"
@@ -20,7 +20,6 @@ export function FeatureSection() {
             <div
               className={`${feature.bgColor} rounded-xl md:rounded-2xl p-6 md:p-8`}
             >
-              {/* ヘッダー部分 */}
               <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
                 <div className="text-2xl md:text-3xl">{feature.icon}</div>
                 <h3 className="text-lg md:text-2xl font-bold text-gray-900">
@@ -28,7 +27,6 @@ export function FeatureSection() {
                 </h3>
               </div>
 
-              {/* コンテンツ部分 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {feature.sections.map((section, index) => (
                   <div key={index}>

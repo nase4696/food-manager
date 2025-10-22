@@ -5,7 +5,7 @@ import { SIMPLE_FEATURES } from "@/constants/features";
 export function SimpleFeatures() {
   return (
     <div
-      className="mt-16 bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto"
+      className="md:mt-16 bg-white rounded-2xl shadow-lg p-8 max-w-4xl mx-auto"
       id="simple-features"
     >
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

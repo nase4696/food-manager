@@ -15,12 +15,17 @@ export function HeroSection() {
         FreshKeeperを使うことで食品の期限を管理することができ、フードロス削減、食費の節約につながります。
       </p>
       <div className="flex flex-col gap-4 max-w-xs justify-items-center mx-auto md:flex-row">
-        <Button asChild className="w-full md:flex-1" size="lg" variant="green">
+        <Button
+          asChild
+          className="w-full md:flex-1 text-sm md:text-base"
+          size="lg"
+          variant="green"
+        >
           <Link href="/register">無料ではじめる</Link>
         </Button>
         <Button
           asChild
-          className="w-full md:flex-1"
+          className="w-full md:flex-1 text-sm md:text-base"
           size="lg"
           variant="outline"
         >
