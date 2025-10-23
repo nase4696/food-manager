@@ -1,4 +1,3 @@
-// feature-section.tsx
 import { DETAILED_FEATURES } from "@/constants/features";
 
 import { SimpleFeatures } from "./simple-features";
@@ -6,7 +5,7 @@ import { SimpleFeatures } from "./simple-features";
 export function FeatureSection() {
   return (
     <section>
-      <div className="md:hidden">
+      <div className="md:hidden" id="simple-features">
         <SimpleFeatures />
       </div>
 

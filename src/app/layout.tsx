@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 
 import "@/styles/globals.css";
-import { siteConfig } from "@/config/site";
+import { SITE_CONFIG } from "@/constants/site";
 import { cn } from "@/lib/utils";
 
 const fontMontserrat = Montserrat({
@@ -19,10 +19,10 @@ const fontInter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: siteConfig.title,
-    template: `%s | ${siteConfig.title}`,
+    default: SITE_CONFIG.title,
+    template: `%s | ${SITE_CONFIG.title}`,
   },
-  description: siteConfig.description,
+  description: SITE_CONFIG.description,
   keywords: [
     "食品管理",
     "賞味期限",
@@ -33,23 +33,23 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: siteConfig.name,
-      url: siteConfig.url,
+      name: SITE_CONFIG.name,
+      url: SITE_CONFIG.url,
     },
   ],
   openGraph: {
     type: "website",
     locale: "ja",
-    url: siteConfig.url,
-    title: siteConfig.title,
-    description: siteConfig.description,
-    siteName: siteConfig.title,
+    url: SITE_CONFIG.url,
+    title: SITE_CONFIG.title,
+    description: SITE_CONFIG.description,
+    siteName: SITE_CONFIG.title,
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.title,
-    description: siteConfig.description,
-    creator: siteConfig.name,
+    title: SITE_CONFIG.title,
+    description: SITE_CONFIG.description,
+    creator: SITE_CONFIG.name,
   },
 };
 

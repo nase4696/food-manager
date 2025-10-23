@@ -1,6 +1,4 @@
-import type { CategoryConfig } from "@/types/config";
-
-export const categoriesConfig: CategoryConfig[] = [
+export const CATEGORIES_CONFIG = [
   {
     id: "category_vegetable",
     name: "野菜",
@@ -71,7 +69,7 @@ export const categoriesConfig: CategoryConfig[] = [
     color: "#6b7280",
     defaultExpiryDays: 30,
   },
-];
+] as const;
 
 export const CATEGORY_IDS = {
   VEGETABLE: "category_vegetable",
@@ -85,3 +83,6 @@ export const CATEGORY_IDS = {
   GRAIN: "category_grain",
   OTHER: "category_other",
 } as const;
+
+export type CategoryConfig = (typeof CATEGORIES_CONFIG)[number];
+export type CategoryId = (typeof CATEGORY_IDS)[keyof typeof CATEGORY_IDS];
