@@ -1,6 +1,6 @@
 import { hash } from "bcryptjs";
 
-import { categoriesConfig, CATEGORY_IDS } from "@/constants/categories";
+import { CATEGORIES_CONFIG, CATEGORY_IDS } from "@/constants/categories";
 import { prisma } from "@/lib/prisma";
 
 export async function seeding(): Promise<
@@ -31,7 +31,7 @@ export async function seeding(): Promise<
 
       // カテゴリー作成
       await Promise.all(
-        categoriesConfig.map((categoryConfig) =>
+        CATEGORIES_CONFIG.map((categoryConfig) =>
           prisma.category.create({
             data: {
               id: categoryConfig.id,
