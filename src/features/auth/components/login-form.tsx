@@ -8,17 +8,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
-import { useSigninLogic } from "../hooks/use-login-logic";
+import { useLoginLogic } from "../hooks/use-login-logic";
 
 export function LoginForm() {
-  const { from, pending, state, formAction } = useSigninLogic();
+  const { from, pending, state, formAction } = useLoginLogic();
 
   const [form, fields] = useForm({
     lastResult: state,
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: loginSchema });
     },
-    shouldValidate: "onSubmit",
+    shouldValidate: "onBlur",
   });
 
   return (
@@ -32,19 +32,21 @@ export function LoginForm() {
           return <Input key={key} {...inputProps} />;
         })()}
         {fields.email.errors && (
-          <p className="text-red-700">{fields.email.errors}</p>
+          <p className="text-red-500 text-sm">{fields.email.errors}</p>
         )}
       </div>
       <div>
         <Label htmlFor={fields.password.id}>パスワード</Label>
         <Input id={fields.password.id} name={fields.password.name} />
         {fields.password.errors && (
-          <p className="text-red-700">{fields.password.errors}</p>
+          <p className="text-red-500 text-sm">{fields.password.errors}</p>
         )}
       </div>
       {form.errors && (
-        <div className="text-red-700" data-testid="error-container">
-          <h2>Error:</h2>
+        <div
+          className="text-red-500 text-sm text-center"
+          data-testid="error-container"
+        >
           <ul>
             {form.errors.map((error) => (
               <li key={error} role="alert">
