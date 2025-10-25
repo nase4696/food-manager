@@ -8,7 +8,7 @@ import { signIn } from "@/auth";
 
 import { loginSchema } from "../validations/auth-schema";
 
-export const signInAction = async (_: unknown, formData: FormData) => {
+export const LoginAction = async (_: unknown, formData: FormData) => {
   const redirectTo = formData.get("redirect_to")?.toString() || "/dashboard";
 
   const submission = parseWithZod(formData, {
