@@ -4,8 +4,8 @@ import { z } from "zod";
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.url(),
-    DIRECT_URL: z.url(),
+    DATABASE_URL: z.string().url(),
+    DIRECT_URL: z.string().url(),
     // NextAuth関連
     AUTH_SECRET: z.string().min(1),
     AUTH_GOOGLE_ID: z.string().min(1),
@@ -20,7 +20,7 @@ export const env = createEnv({
       .default("development"),
   },
   client: {
-    NEXT_PUBLIC_SUPABASE_URL: z.url(),
+    NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   },
   runtimeEnv: {
