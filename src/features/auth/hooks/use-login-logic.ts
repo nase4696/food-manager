@@ -1,12 +1,12 @@
 import { useSearchParams } from "next/navigation.js";
 import { useActionState } from "react";
 
-import { signInAction } from "../actions/authAction";
+import { LoginAction } from "../actions/authAction";
 
-export function useSigninLogic() {
-  const [state, formAction, pending] = useActionState(signInAction, undefined);
+export function useLoginLogic() {
+  const [state, formAction, pending] = useActionState(LoginAction, undefined);
   const searchParams = useSearchParams();
-  const from = searchParams?.get("redirect_to") || "/home";
+  const from = searchParams?.get("redirect_to") || "/dashboard";
 
   return {
     from,
