@@ -1,7 +1,9 @@
-import { LoaderCircle, type LucideProps } from "lucide-react";
+import { Eye, EyeOff, LoaderCircle, type LucideProps } from "lucide-react";
 
 export const Icons = {
   circle: LoaderCircle,
+  passwordClose: EyeOff,
+  passwordOpen: Eye,
   github: (props: LucideProps) => (
     <svg
       height="20"

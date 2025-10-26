@@ -4,9 +4,10 @@ import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 
 import { loginSchema } from "@/features/auth/validations/auth-schema";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/ui/input/input";
 import { Label } from "@/components/ui/label";
 import { LoadingButton } from "@/components/ui/button/loading-button";
+import { PasswordInput } from "@/components/ui/input/password-input";
 
 import { useLoginLogic } from "../hooks/use-login-logic";
 
@@ -38,8 +39,9 @@ export function LoginForm() {
       </div>
       <div>
         <Label htmlFor={fields.password.id}>パスワード</Label>
-        <Input
+        <PasswordInput
           {...getInputProps(fields.password, { type: "password" })}
+          id={fields.password.id}
           key={fields.password.key}
         />
         {fields.password.errors && (
