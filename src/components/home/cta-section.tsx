@@ -1,7 +1,7 @@
 // components/home/cta-section.tsx
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button/button";
 
 export function CtaSection() {
   return (
