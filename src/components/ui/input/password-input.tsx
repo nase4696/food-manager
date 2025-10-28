@@ -17,8 +17,8 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
     <div className="relative">
       <Input
         className={cn("pr-10", className)}
-        type={showPassword ? "text" : "password"} // 内部状態でtypeを決定
-        {...restProps} // type以外の親から渡されたプロパティを展開
+        type={showPassword ? "text" : "password"}
+        {...restProps}
       />
       <button
         aria-label={showPassword ? "パスワードを非表示" : "パスワードを表示"}
