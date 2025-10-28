@@ -27,11 +27,7 @@ export function LoginForm() {
       <input name="redirect_to" type="hidden" value={from} />
       <div>
         <Label htmlFor={fields.email.id}>メールアドレス</Label>
-        <Input
-          {...getInputProps(fields.email, { type: "email" })}
-          aria-describedby="email-error"
-          key={fields.email.key}
-        />
+        <Input {...getInputProps(fields.email, { type: "email" })} />
         {fields.email.errors && (
           <p className="text-red-500 text-sm" id="email-error" role="alert">
             {fields.email.errors}
@@ -42,9 +38,6 @@ export function LoginForm() {
         <Label htmlFor={fields.password.id}>パスワード</Label>
         <PasswordInput
           {...getInputProps(fields.password, { type: "password" })}
-          aria-describedby="password-error"
-          id={fields.password.id}
-          key={fields.password.key}
         />
         {fields.password.errors && (
           <p className="text-red-500 text-sm" id="password-error" role="alert">
