@@ -2,6 +2,18 @@
   "name": "food-manager",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "imports": {
+    "#auth-actions": {
+      "storybook": "./src/__mocks__/auth-actions.mock.ts",
+      "default": "./src/features/auth/actions/authAction"
+    },
+    "#*": [
+      "./*",
+      "./*.ts",
+      "./*.tsx"
+    ]
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "prisma generate && next build --turbopack",

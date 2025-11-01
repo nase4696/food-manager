@@ -7,7 +7,7 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-white">
+    <div className="min-h-screen bg-linear-to-br from-green-50 to-white">
       <MarketingHeader />
       <main className="flex-1">{children}</main>
       <MarketingFooter />
