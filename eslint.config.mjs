@@ -25,7 +25,7 @@ const eslintConfig = [
     },
     rules: {
       "import/no-duplicates": "error",
-      "import/no-unresolved": "error",
+      "import/no-unresolved": "off",
       "import/order": [
         "error",
         {
@@ -39,6 +39,14 @@ const eslintConfig = [
             "object",
           ],
           "newlines-between": "always",
+          pathGroups: [
+            {
+              pattern: "#*",
+              group: "internal",
+              position: "before",
+            },
+          ],
+          pathGroupsExcludedImportTypes: ["builtin"],
         },
       ],
     },
@@ -58,6 +66,12 @@ const eslintConfig = [
     },
     rules: {
       "react/jsx-sort-props": "error",
+    },
+  },
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    rules: {
+      "import/no-unresolved": "off",
     },
   },
   {

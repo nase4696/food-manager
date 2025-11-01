@@ -9,6 +9,12 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    nextjs: {
+      appDirectory: true,
+      navigation: {
+        query: { redirect_to: "/dashboard" },
+      },
+    },
   },
 };
 

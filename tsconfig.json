@@ -48,7 +48,8 @@
     "**/*.js",
     ".next/types/**/*.ts",
     "postcss.config.mjs",
-    "prettier.config.js"
+    "prettier.config.js",
+    "src/__mocks__/**/*"
   ],
 
   "exclude": [
