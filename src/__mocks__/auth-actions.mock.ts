@@ -5,7 +5,6 @@ export const LoginAction = fn().mockName("LoginAction");
 LoginAction.mockImplementation(async (_, formData) => {
   const email = formData.get("email");
   const password = formData.get("password");
-  console.log("mock処理が呼び出されました");
 
   if (!email || !password) {
     return {
