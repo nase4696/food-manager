@@ -32,11 +32,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "../src"),
     },
   },
-  optimizeDeps: {
-    include: [
-      "@storybook/addon-a11y/preview",
-      "@storybook/nextjs-vite",
-      "markdown-to-jsx",
-    ],
-  },
 });
