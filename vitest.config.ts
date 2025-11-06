@@ -1,42 +1,26 @@
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 import { defineConfig } from "vitest/config";
-import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
-import { playwright } from "@vitest/browser-playwright";
-
-const dirname =
-  typeof __dirname !== "undefined"
-    ? __dirname
-    : path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   test: {
-    projects: [
-      {
-        extends: true,
-        plugins: [
-          storybookTest({ configDir: path.join(dirname, ".storybook") }),
-        ],
-        test: {
-          name: "storybook",
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: playwright({}),
-            instances: [{ browser: "chromium" }],
-          },
-          setupFiles: [".storybook/vitest.setup.ts"],
-        },
+    name: "unit",
+    environment: "jsdom",
+    include: ["src/**/*.test.ts"],
+    exclude: ["**/node_modules/**", "**/*.stories.*"],
+    setupFiles: ["src/test/vitest.setup.ts"],
+    server: {
+      deps: {
+        inline: ["next", "next-auth"],
       },
-      {
-        test: {
-          name: "node",
-          environment: "node",
-          include: ["src/**/*.test.ts"],
-          setupFiles: ["src/test/vitest.setup.ts"],
-        },
-      },
-    ],
+    },
+    globals: true,
+  },
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+      "next/navigation": "next/navigation.js",
+      "next/server": "next/server.js",
+    },
   },
 });

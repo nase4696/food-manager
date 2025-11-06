@@ -57,7 +57,7 @@
     ".next",
     "dist",
     "generated",
-    "**/*.test.ts",
-    "**/*.spec.ts"
+    "*.test.ts",
+    "*.spec.ts"
   ]
 }
