@@ -8,8 +8,7 @@ export const loginSchema = z.object({
     },
     z
       .string({ required_error: "メールアドレスを入力して下さい" })
-      .email({ message: "メールアドレスの形式が不正です" })
-      .min(1, { message: "メールアドレスを入力して下さい" }),
+      .email({ message: "メールアドレスの形式が不正です" }),
   ),
 
   password: z.preprocess(
@@ -17,10 +16,61 @@ export const loginSchema = z.object({
       if (typeof value === "string") return value;
       return "";
     },
-    z
-      .string({ required_error: "パスワードを入力して下さい" })
-      .min(1, { message: "パスワードを入力して下さい" }),
+    z.string({ required_error: "パスワードを入力して下さい" }),
   ),
 });
 
 export type SignInInputs = z.infer<typeof loginSchema>;
+
+export const signupSchema = z
+  .object({
+    name: z.preprocess(
+      (value) => {
+        if (typeof value === "string") return value.trim();
+        return "";
+      },
+      z
+        .string({ required_error: "ユーザー名を入力して下さい" })
+        .max(10, { message: "ユーザー名は10文字以内でお願いします" }),
+    ),
+    email: z.preprocess(
+      (value) => {
+        if (typeof value === "string") return value.trim();
+        return "";
+      },
+      z
+        .string({ required_error: "メールアドレスを入力して下さい" })
+        .email({ message: "メールアドレスの形式が不正です" }),
+    ),
+    password: z.preprocess(
+      (value) => {
+        if (typeof value === "string") return value;
+        return "";
+      },
+      z
+        .string({ required_error: "パスワードを入力して下さい" })
+        .regex(/^(?=.*[A-Za-z])(?=.*[0-9])/, {
+          message: "少なくとも1つの英字、1つの数字を含んでいる必要があります",
+        })
+        .min(8, { message: "パスワードは8文字以上でお願いします" })
+        .max(100),
+    ),
+    confirmPassword: z.preprocess(
+      (value) => {
+        if (typeof value === "string") return value;
+        return "";
+      },
+      z.string({ required_error: "確認用パスワードを入力して下さい" }),
+    ),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: "custom",
+        message: "パスワードが一致しません",
+        path: ["confirmPassword"],
+      });
+    }
+  });
+
+export type SignupInputs = z.infer<typeof signupSchema>;
