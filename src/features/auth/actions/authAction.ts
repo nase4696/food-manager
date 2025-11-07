@@ -3,10 +3,13 @@
 import { parseWithZod } from "@conform-to/zod";
 import { redirect } from "next/navigation.js";
 import { AuthError } from "next-auth";
+import bcrypt from "bcryptjs";
 
 import { signIn } from "@/auth";
+import { prisma } from "@/lib/prisma";
+import { env } from "@/env";
 
-import { loginSchema } from "../validations/auth-schema";
+import { loginSchema, signupSchema } from "../validations/auth-schema";
 
 export const LoginAction = async (_: unknown, formData: FormData) => {
   const redirectTo = formData.get("redirect_to")?.toString() || "/dashboard";
@@ -52,4 +55,55 @@ export const LoginAction = async (_: unknown, formData: FormData) => {
   successUrl.searchParams.set("toast", "login_success");
 
   redirect(successUrl.pathname + successUrl.search);
+};
+
+export const signupAction = async (_: unknown, formData: FormData) => {
+  const from = formData.get("redirect_to")?.toString() || "/home";
+
+  const submission = parseWithZod(formData, {
+    schema: signupSchema,
+  });
+
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
+
+  const { name, email, password } = submission.value;
+
+  try {
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return submission.reply({
+        formErrors: ["このメールアドレスはすでに登録されています"],
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    await signIn("credentials", {
+      email,
+      password,
+      redirectTo: `${from}?toast_code=register_success&redirect_to=${formData.get(
+        "redirect_to",
+      )}`,
+    });
+
+    return submission.reply();
+  } catch (error) {
+    if (env.NODE_ENV !== "production") console.error("Signup error:", error);
+
+    return submission.reply({
+      formErrors: [
+        "システムエラーが発生しました。しばらく経ってから再度お試しください。",
+      ],
+    });
+  }
 };
