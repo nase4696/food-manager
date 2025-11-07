@@ -57,7 +57,7 @@ export const LoginAction = async (_: unknown, formData: FormData) => {
   redirect(successUrl.pathname + successUrl.search);
 };
 
-export const signupAction = async (_: unknown, formData: FormData) => {
+export const SignupAction = async (_: unknown, formData: FormData) => {
   const from = formData.get("redirect_to")?.toString() || "/home";
 
   const submission = parseWithZod(formData, {
