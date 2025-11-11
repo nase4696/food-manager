@@ -91,12 +91,8 @@ export const SignupAction = async (_: unknown, formData: FormData) => {
     await signIn("credentials", {
       email,
       password,
-      redirectTo: `${from}?toast_code=register_success&redirect_to=${formData.get(
-        "redirect_to",
-      )}`,
+      redirect: false,
     });
-
-    return submission.reply();
   } catch (error) {
     if (env.NODE_ENV !== "production") console.error("Signup error:", error);
 
@@ -106,4 +102,9 @@ export const SignupAction = async (_: unknown, formData: FormData) => {
       ],
     });
   }
+
+  const successUrl = new URL(from, "http://localhost:3000");
+  successUrl.searchParams.set("toast_code", "register_success");
+
+  redirect(successUrl.pathname + successUrl.search);
 };

@@ -25,7 +25,7 @@ export function SignupForm() {
   return (
     <form {...getFormProps(form)} action={formAction} className="space-y-4">
       <div>
-        <Label htmlFor={fields.name.id}>名前</Label>
+        <Label htmlFor={fields.name.id}>ユーザー名</Label>
         <Input {...getInputProps(fields.name, { type: "text" })} />
         {fields.name.errors && (
           <div className="text-red-500 text-sm" id="name-error" role="alert">

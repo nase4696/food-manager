@@ -27,9 +27,9 @@ export function PasswordInput({ className, ...props }: PasswordInputProps) {
         type="button"
       >
         {showPassword ? (
-          <Icons.passwordOpen className="h-4 w-4" />
-        ) : (
           <Icons.passwordClose className="h-4 w-4" />
+        ) : (
+          <Icons.passwordOpen className="h-4 w-4" />
         )}
       </button>
     </div>
