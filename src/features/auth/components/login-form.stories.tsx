@@ -6,7 +6,7 @@ import { LoginAction } from "#auth-actions";
 import { LoginForm } from "./login-form";
 
 const meta = {
-  title: "Features/Auth/LoginForm",
+  title: "features/auth/LoginForm",
   component: LoginForm,
   parameters: {
     layout: "centered",

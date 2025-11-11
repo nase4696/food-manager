@@ -181,9 +181,12 @@ describe("signupAction", () => {
     expect(signInMock).toHaveBeenCalledWith("credentials", {
       email: "newuser@example.com",
       password: "Password123",
-      redirectTo:
-        "/dashboard?toast_code=register_success&redirect_to=/dashboard",
+      redirect: false,
     });
+
+    expect(redirectMock).toHaveBeenCalledWith(
+      "/dashboard?toast_code=register_success",
+    );
   });
 
   it("データベースエラーが発生した場合はシステムエラーメッセージを返す", async () => {
@@ -203,5 +206,9 @@ describe("signupAction", () => {
 
     expect(result.status).toBe("error");
     expect(result.error?.[""]?.[0]).toContain("システムエラーが発生しました");
+
+    expect(signInMock).not.toHaveBeenCalled();
+
+    expect(redirectMock).not.toHaveBeenCalled();
   });
 });

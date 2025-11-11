@@ -1,7 +1,7 @@
 import { useSearchParams } from "next/navigation.js";
 import { useActionState } from "react";
 
-import { SignupAction } from "../actions/authAction";
+import { SignupAction } from "#auth-actions";
 
 export function useSignupLogic() {
   const [state, formAction, pending] = useActionState(SignupAction, undefined);
