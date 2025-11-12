@@ -3,13 +3,16 @@ import { AuthError } from "next-auth";
 
 import prismaMock from "@/mocks/prisma";
 
-const { signInMock, redirectMock, bcryptMock } = vi.hoisted(() => ({
-  signInMock: vi.fn(),
-  redirectMock: vi.fn(),
-  bcryptMock: {
-    hash: vi.fn(),
-  },
-}));
+const { signInMock, redirectMock, bcryptMock, UserCreateMock } = vi.hoisted(
+  () => ({
+    signInMock: vi.fn(),
+    redirectMock: vi.fn(),
+    bcryptMock: {
+      hash: vi.fn(),
+    },
+    UserCreateMock: vi.fn(),
+  }),
+);
 
 vi.mock("next/navigation", () => ({
   redirect: redirectMock,
@@ -27,6 +30,10 @@ vi.mock("bcryptjs", () => ({
   default: {
     hash: bcryptMock.hash,
   },
+}));
+
+vi.mock("@/lib/user/user-data-fetcher", () => ({
+  UserCreate: UserCreateMock,
 }));
 
 import { LoginAction, SignupAction } from "../authAction";
@@ -150,13 +157,10 @@ describe("signupAction", () => {
 
     bcryptMock.hash.mockResolvedValue("hashedpassword123");
 
-    prismaMock.user.create.mockResolvedValue({
+    UserCreateMock.mockResolvedValue({
       id: "2",
-      email: "newuser@example.com",
       name: "新しいユーザー",
-      password: "hashedpassword123",
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      email: "newuser@example.com",
     });
 
     signInMock.mockResolvedValue({ ok: true });
@@ -170,12 +174,10 @@ describe("signupAction", () => {
 
     await SignupAction(null, formData);
 
-    expect(prismaMock.user.create).toHaveBeenCalledWith({
-      data: {
-        name: "新しいユーザー",
-        email: "newuser@example.com",
-        password: "hashedpassword123",
-      },
+    expect(UserCreateMock).toHaveBeenCalledWith({
+      name: "新しいユーザー",
+      email: "newuser@example.com",
+      hashedPassword: "hashedpassword123",
     });
 
     expect(signInMock).toHaveBeenCalledWith("credentials", {
@@ -194,7 +196,7 @@ describe("signupAction", () => {
 
     bcryptMock.hash.mockResolvedValue("hashedpassword123");
 
-    prismaMock.user.create.mockRejectedValue(new Error("Database error"));
+    UserCreateMock.mockRejectedValue(new Error("Database error"));
 
     const formData = new FormData();
     formData.append("name", "テストユーザー");
