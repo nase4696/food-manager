@@ -8,6 +8,7 @@ import bcrypt from "bcryptjs";
 import { signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { env } from "@/env";
+import { UserCreate } from "@/lib/user/user-data-fetcher";
 
 import { loginSchema, signupSchema } from "../validations/auth-schema";
 
@@ -80,13 +81,7 @@ export const SignupAction = async (_: unknown, formData: FormData) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.user.create({
-      data: {
-        name,
-        email,
-        password: hashedPassword,
-      },
-    });
+    await UserCreate({ name, email, hashedPassword });
 
     await signIn("credentials", {
       email,
