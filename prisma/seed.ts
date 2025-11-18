@@ -2,6 +2,7 @@ import { hash } from "bcryptjs";
 
 import { CATEGORIES_CONFIG, CATEGORY_IDS } from "@/constants/categories";
 import { prisma } from "@/lib/prisma";
+import { getStartOfDay, getEndOfDaysLater } from "@/lib/utils/date-utils";
 
 export async function seeding(): Promise<
   | {
@@ -29,7 +30,6 @@ export async function seeding(): Promise<
 
       console.log("🏷️ 食品カテゴリーを作成中...");
 
-      // カテゴリー作成
       await Promise.all(
         CATEGORIES_CONFIG.map((categoryConfig) =>
           prisma.category.create({
@@ -44,7 +44,7 @@ export async function seeding(): Promise<
         ),
       );
 
-      // ユーザー① - 山田太郎
+      //  ユーザー① - 山田太郎
       const userTaro = await prisma.user.create({
         data: {
           email: "taro@example.com",
@@ -53,7 +53,6 @@ export async function seeding(): Promise<
         },
       });
 
-      // 山田太郎のストレージスペース
       const storageTaro1 = await prisma.storageSpace.create({
         data: {
           name: "冷蔵庫",
@@ -75,76 +74,103 @@ export async function seeding(): Promise<
         },
       });
 
-      // 山田太郎の食品を作成
       await prisma.food.createMany({
         data: [
           {
             name: "牛乳",
             categoryId: CATEGORY_IDS.DAIRY,
-            expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-            storageId: storageTaro1.id,
-            userId: userTaro.id,
-          },
-          {
-            name: "卵",
-            categoryId: CATEGORY_IDS.DAIRY,
-            expiryDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
-            storageId: storageTaro1.id,
-            userId: userTaro.id,
-          },
-          {
-            name: "にんじん",
-            categoryId: CATEGORY_IDS.VEGETABLE,
-            expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+            expiryDate: getEndOfDaysLater(1),
             storageId: storageTaro1.id,
             userId: userTaro.id,
           },
           {
             name: "鶏むね肉",
             categoryId: CATEGORY_IDS.MEAT,
-            expiryDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
+            expiryDate: getEndOfDaysLater(0),
             storageId: storageTaro1.id,
             userId: userTaro.id,
           },
           {
+            name: "にんじん",
+            categoryId: CATEGORY_IDS.VEGETABLE,
+            expiryDate: getEndOfDaysLater(2),
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+
+          {
+            name: "卵",
+            categoryId: CATEGORY_IDS.DAIRY,
+            expiryDate: getEndOfDaysLater(5),
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "チーズケーキ",
+            categoryId: CATEGORY_IDS.SWEETS,
+            expiryDate: getEndOfDaysLater(7),
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+
+          {
+            name: "古いパン",
+            categoryId: CATEGORY_IDS.GRAIN,
+            expiryDate: getStartOfDay(
+              new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+            ),
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "昨日のヨーグルト",
+            categoryId: CATEGORY_IDS.DAIRY,
+            expiryDate: getStartOfDay(
+              new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
+            ),
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+
+          {
             name: "アイスクリーム",
             categoryId: CATEGORY_IDS.SWEETS,
-            expiryDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+            expiryDate: getEndOfDaysLater(60),
             storageId: storageTaro2.id,
             userId: userTaro.id,
           },
           {
             name: "冷凍ほうれん草",
             categoryId: CATEGORY_IDS.VEGETABLE,
-            expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            expiryDate: getEndOfDaysLater(30),
             storageId: storageTaro2.id,
             userId: userTaro.id,
           },
           {
             name: "米",
             categoryId: CATEGORY_IDS.GRAIN,
-            expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+            expiryDate: getEndOfDaysLater(365),
             storageId: storageTaro3.id,
             userId: userTaro.id,
           },
           {
             name: "インスタントラーメン",
             categoryId: CATEGORY_IDS.INSTANT,
-            expiryDate: new Date(Date.now() + 180 * 24 * 60 * 60 * 1000),
+            expiryDate: getEndOfDaysLater(180),
             storageId: storageTaro3.id,
             userId: userTaro.id,
           },
           {
             name: "醤油",
             categoryId: CATEGORY_IDS.SEASONING,
-            expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+            expiryDate: getEndOfDaysLater(365),
             storageId: storageTaro3.id,
             userId: userTaro.id,
           },
         ],
       });
 
-      // ユーザー② - 朝倉シン
+      //  ユーザー② - 朝倉シン
       const userHanako = await prisma.user.create({
         data: {
           email: "hanako@example.com",
@@ -153,7 +179,6 @@ export async function seeding(): Promise<
         },
       });
 
-      // 6. 朝倉シンのストレージスペース
       const storageHanako = await prisma.storageSpace.create({
         data: {
           name: "冷蔵庫",
@@ -161,59 +186,92 @@ export async function seeding(): Promise<
         },
       });
 
-      // 7. 朝倉シンの食品を作成（期限未設定）
       await prisma.food.createMany({
         data: [
           {
+            name: "鮭",
+            categoryId: CATEGORY_IDS.FISH,
+            expiryDate: getEndOfDaysLater(1),
+            storageId: storageHanako.id,
+            userId: userHanako.id,
+          },
+          {
+            name: "豆腐",
+            categoryId: CATEGORY_IDS.DAIRY,
+            expiryDate: getEndOfDaysLater(2),
+            storageId: storageHanako.id,
+            userId: userHanako.id,
+          },
+
+          {
+            name: "チーズケーキ",
+            categoryId: CATEGORY_IDS.SWEETS,
+            expiryDate: getEndOfDaysLater(4),
+            storageId: storageHanako.id,
+            userId: userHanako.id,
+          },
+          {
+            name: "サラダ",
+            categoryId: CATEGORY_IDS.VEGETABLE,
+            expiryDate: getEndOfDaysLater(6),
+            storageId: storageHanako.id,
+            userId: userHanako.id,
+          },
+
+          {
+            name: "先週のパスタ",
+            categoryId: CATEGORY_IDS.GRAIN,
+            expiryDate: getStartOfDay(
+              new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+            ),
+            storageId: storageHanako.id,
+            userId: userHanako.id,
+          },
+
+          {
+            name: "コーラ",
+            categoryId: CATEGORY_IDS.DRINK,
+            expiryDate: getEndOfDaysLater(90),
+            storageId: storageHanako.id,
+            userId: userHanako.id,
+          },
+          {
+            name: "カップ麺",
+            categoryId: CATEGORY_IDS.INSTANT,
+            expiryDate: getEndOfDaysLater(200),
+            storageId: storageHanako.id,
+            userId: userHanako.id,
+          },
+
+          {
             name: "テスト用の肉",
             categoryId: CATEGORY_IDS.MEAT,
-
+            expiryDate: null,
             storageId: storageHanako.id,
             userId: userHanako.id,
           },
           {
             name: "テスト用の野菜",
             categoryId: CATEGORY_IDS.VEGETABLE,
-
+            expiryDate: null,
             storageId: storageHanako.id,
             userId: userHanako.id,
           },
           {
             name: "テスト用の魚",
             categoryId: CATEGORY_IDS.FISH,
-
-            storageId: storageHanako.id,
-            userId: userHanako.id,
-          },
-          {
-            name: "鮭",
-            categoryId: CATEGORY_IDS.FISH,
-            expiryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-            storageId: storageHanako.id,
-            userId: userHanako.id,
-          },
-          {
-            name: "コーラ",
-            categoryId: CATEGORY_IDS.DRINK,
-            expiryDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-            storageId: storageHanako.id,
-            userId: userHanako.id,
-          },
-          {
-            name: "チーズケーキ",
-            categoryId: CATEGORY_IDS.SWEETS,
-            expiryDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
+            expiryDate: null,
             storageId: storageHanako.id,
             userId: userHanako.id,
           },
         ],
       });
 
-      //ユーザー③ - 名前なしユーザー
+      //  ユーザー③ - テストユーザー
       const userTest = await prisma.user.create({
         data: {
           email: "test@example.com",
-          name: null,
+          name: "テストユーザー",
           password: await hash("password123", 12),
         },
       });
@@ -225,15 +283,33 @@ export async function seeding(): Promise<
         },
       });
 
-      await prisma.food.create({
-        data: {
-          name: "ヨーグルト",
-          categoryId: CATEGORY_IDS.DAIRY,
-          expiryDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
-          storageId: storageTest.id,
-          userId: userTest.id,
-          isConsumed: true,
-        },
+      await prisma.food.createMany({
+        data: [
+          {
+            name: "消費済みヨーグルト",
+            categoryId: CATEGORY_IDS.DAIRY,
+            expiryDate: getEndOfDaysLater(10),
+            storageId: storageTest.id,
+            userId: userTest.id,
+            isConsumed: true,
+          },
+          {
+            name: "まだある牛乳",
+            categoryId: CATEGORY_IDS.DAIRY,
+            expiryDate: getEndOfDaysLater(3),
+            storageId: storageTest.id,
+            userId: userTest.id,
+            isConsumed: false,
+          },
+          {
+            name: "長持ちするはちみつ",
+            categoryId: CATEGORY_IDS.SEASONING,
+            expiryDate: getEndOfDaysLater(500),
+            storageId: storageTest.id,
+            userId: userTest.id,
+            isConsumed: false,
+          },
+        ],
       });
 
       console.log("シードデータ作成完了！");
@@ -264,13 +340,16 @@ async function main() {
 
   if (result.status === "success") {
     console.log(
-      `\n シードデータの投入が成功しました！\n` +
+      `\n🎉 シードデータの投入が成功しました！\n` +
         `作成されたデータ:\n` +
-        `   ユーザー: ${result.data.countUsers}人\n` +
-        `   ストレージスペース: ${result.data.countStorageSpaces}個\n` +
-        `   食品: ${result.data.countFoods}品目\n` +
-        `   食品カテゴリー: ${result.data.countCategories}種類\n` +
-        `\n`,
+        `👥 ユーザー: ${result.data.countUsers}人\n` +
+        `📦 ストレージスペース: ${result.data.countStorageSpaces}個\n` +
+        `🍎 食品: ${result.data.countFoods}品目\n` +
+        `🏷️ 食品カテゴリー: ${result.data.countCategories}種類\n` +
+        `\nテスト用アカウント:\n` +
+        `📧 山田太郎: taro@example.com / password123\n` +
+        `📧 朝倉シン: hanako@example.com / password123\n` +
+        `📧 テストユーザー: test@example.com / password123\n`,
     );
   } else {
     console.error("シードデータの投入に失敗しました:");

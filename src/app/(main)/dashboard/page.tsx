@@ -1,4 +1,22 @@
-export default function DashboardPage() {
+import {
+  getExpiringFoods,
+  getExpiredFoods,
+  getFoodStats,
+} from "@/lib/food/food-data-fetcher";
+
+export default async function DashboardPage() {
+  const [expiringSoon, expiredFoods, stats] = await Promise.all([
+    getExpiringFoods(3), // 3日以内
+    getExpiredFoods(), // 期限切れ
+    getFoodStats(), // 統計
+  ]);
+
+  console.log("📦 取得したデータ:", {
+    期限間近: expiringSoon.length,
+    期限切れ: expiredFoods.length,
+    統計: stats,
+  });
+
   return (
     <div className="min-h-screen p-4 md:p-6">
       <h1 className="text-2xl md:text-3xl font-bold mb-6">ダッシュボード</h1>
