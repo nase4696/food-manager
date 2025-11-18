@@ -26,16 +26,16 @@ export function MainHeader() {
     <header className="container mx-auto flex items-center gap-2 px-2 md:px-4 py-3">
       <div className="grid grid-cols-3 w-full items-center md:hidden">
         <div className="flex justify-start">
-          {/* {!isDashboard && ( */}
-          <Button
-            aria-label="前のページに戻る"
-            onClick={() => router.back()}
-            size="icon"
-            variant="ghost"
-          >
-            <ChevronLeft className="w-10! h-10!" />
-          </Button>
-          {/* )} */}
+          {!isDashboard && (
+            <Button
+              aria-label="前のページに戻る"
+              onClick={() => router.back()}
+              size="icon"
+              variant="ghost"
+            >
+              <ChevronLeft className="w-10! h-10!" />
+            </Button>
+          )}
         </div>
         <div className="flex justify-center">
           <h1 className="text-lg font-semibold text-nowrap text-center">
