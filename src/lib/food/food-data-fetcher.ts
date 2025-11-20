@@ -14,6 +14,8 @@ export async function getExpiringFoods(days: number) {
     redirect("/login");
   }
 
+  console.log("ユーザー情報:", session.user);
+
   const todayStart = getStartOfDay(new Date());
   const targetDate = getEndOfDaysLater(days);
 

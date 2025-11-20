@@ -131,7 +131,6 @@ export async function seeding(): Promise<
             storageId: storageTaro1.id,
             userId: userTaro.id,
           },
-
           {
             name: "アイスクリーム",
             categoryId: CATEGORY_IDS.SWEETS,
