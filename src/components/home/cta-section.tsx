@@ -1,11 +1,10 @@
-// components/home/cta-section.tsx
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button/button";
 
 export function CtaSection() {
   return (
-    <section className="py-12 md:py-20 bg-gradient-to-r from-green-400 to-green-600">
+    <section className="py-12 md:py-20 bg-linear-to-r from-green-400 to-green-600">
       <div className="container max-w-4xl mx-auto px-4 text-center">
         <h2 className="text-xl md:text-3xl font-bold text-white mb-4 md:mb-6">
           今すぐ食品管理を始めよう

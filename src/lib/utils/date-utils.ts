@@ -16,12 +16,6 @@ export function getEndOfDaysLater(days: number): Date {
   return getEndOfDay(date);
 }
 
-export function getStartOfDaysLater(days: number): Date {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  return getStartOfDay(date);
-}
-
 export function getDaysRemaining(expiryDate: Date | null): number | null {
   if (!expiryDate) return null;
 
