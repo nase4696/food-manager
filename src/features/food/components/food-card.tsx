@@ -7,22 +7,24 @@ import { Badge } from "@/components/ui/badge";
 
 import { getFoodExpiryText, getFoodStatusStyles } from "../utils/food-utils";
 
-interface FoodCardProps {
+type FoodCardProps = {
   food: {
     id: string;
     name: string;
     expiryDate: Date | null;
     category: {
       name: string;
-      color: string;
+      color: string | null;
     };
     storage: {
       name: string;
+      id: string;
+      userId: string;
     };
   };
   isLoading?: boolean;
   onConsume?: () => void;
-}
+};
 
 export function FoodCard({ food }: FoodCardProps) {
   const styles = getFoodStatusStyles(food.expiryDate);
