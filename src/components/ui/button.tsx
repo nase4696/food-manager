@@ -21,6 +21,8 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground active:bg-accent/80 dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline active:underline active:text-primary/80",
         green: "bg-green-500 hover:bg-green-600 text-white active:bg-green-600",
+        sectionHeader:
+          "bg-white hover:bg-gray-50 active:bg-gray-100 border-0 rounded-none h-auto justify-start",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -29,6 +31,7 @@ const buttonVariants = cva(
         icon: "size-9",
         "icon-sm": "size-8",
         "icon-lg": "size-10",
+        full: "w-full h-auto p-0",
       },
     },
     defaultVariants: {
