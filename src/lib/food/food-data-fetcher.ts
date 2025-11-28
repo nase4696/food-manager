@@ -214,6 +214,7 @@ export async function getFoodStats() {
 export async function getExpiryStatusStats(): Promise<{
   stats: ExpiryStats;
   expiringFoods: FoodDisplay[];
+  warningFoods: FoodDisplay[];
   expiredFoods: FoodDisplay[];
 }> {
   const session = await getServerSession();
@@ -255,7 +256,6 @@ export async function getExpiryStatusStats(): Promise<{
           expiryDate: { lt: todayStart },
         },
       }),
-      // 未消費の食品データを取得（Prisma型で）
       prisma.food.findMany({
         where: {
           userId: session.user.id,
@@ -284,6 +284,15 @@ export async function getExpiryStatusStats(): Promise<{
     }),
   );
 
+  // 要注意の食品（4〜7日以内）
+  const warningFoods = convertToFoodDisplayArray(
+    activeFoods.filter((food) => {
+      if (!food.expiryDate) return false;
+      const expiry = new Date(food.expiryDate);
+      return expiry >= fourDaysLater && expiry <= sevenDaysLater;
+    }),
+  );
+
   // 期限切れの食品（今日より前）
   const expiredFoods = convertToFoodDisplayArray(
     activeFoods.filter((food) => {
@@ -293,12 +302,10 @@ export async function getExpiryStatusStats(): Promise<{
     }),
   );
 
-  console.log("期限間近の食品:", expiringFoods);
-  console.log("期限切れの食品:", expiredFoods);
-
   return {
     stats,
     expiringFoods,
+    warningFoods,
     expiredFoods,
   };
 }

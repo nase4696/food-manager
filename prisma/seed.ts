@@ -166,6 +166,55 @@ export async function seeding(): Promise<
             storageId: storageTaro3.id,
             userId: userTaro.id,
           },
+          {
+            name: "【テスト】昨日期限切れ",
+            categoryId: CATEGORY_IDS.DAIRY,
+            expiryDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // 昨日
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "【テスト】今日期限切れ",
+            categoryId: CATEGORY_IDS.MEAT,
+            expiryDate: new Date(), // 今
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "【テスト】明日期限",
+            categoryId: CATEGORY_IDS.VEGETABLE,
+            expiryDate: new Date(Date.now() + 24 * 60 * 60 * 1000), // 明日
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "【テスト】2日後期限",
+            categoryId: CATEGORY_IDS.DAIRY,
+            expiryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2日後
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "【テスト】3日後期限",
+            categoryId: CATEGORY_IDS.FISH,
+            expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3日後
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "【テスト】4日後期限",
+            categoryId: CATEGORY_IDS.DRINK,
+            expiryDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // 4日後
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
+          {
+            name: "【テスト】5日後期限",
+            categoryId: CATEGORY_IDS.INSTANT,
+            expiryDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5日後
+            storageId: storageTaro1.id,
+            userId: userTaro.id,
+          },
         ],
       });
 

@@ -8,9 +8,9 @@ import { STATS_CONFIG } from "@/constants/stats";
 
 import { Button } from "../ui/button";
 
-interface StatsOverviewProps {
+type StatsOverviewProps = {
   stats: ExpiryStats;
-}
+};
 
 export function StatsOverview({ stats }: StatsOverviewProps) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -100,64 +100,3 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
     </section>
   );
 }
-
-// return (
-//     <section className="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100">
-//       {/* ヘッダー - モダンなデザイン */}
-//       <button
-//         className="w-full flex items-center justify-between p-2 sm:p-6 bg-white hover:bg-gray-50 transition-all duration-300 border-b border-gray-100"
-//         onClick={() => setIsExpanded(!isExpanded)}
-//       >
-//         <div className="flex items-center gap-4">
-//           <div className="p-1 md:p-3 bg-gray-100 rounded-xl">
-//             <div className="text-2xl text-gray-700">📊</div>
-//           </div>
-//           <div className="text-left">
-//             <h2 className="text-lg font-bold text-gray-900">統計概要</h2>
-//             <p className="text-sm text-gray-600 mt-1">
-//               食品の管理状況を一目で確認
-//             </p>
-//           </div>
-//         </div>
-//         <div className="flex items-center gap-3">
-//           <div className="hidden sm:flex items-center gap-2">
-//             <span className="bg-gray-800 text-white px-3 py-1 rounded-full text-sm font-medium">
-//               計{stats.active}品
-//             </span>
-//           </div>
-//           <div className="p-2 bg-gray-100 rounded-lg">
-//             {isExpanded ? (
-//               <ChevronUp className="h-3! w-3! sm:h-5! sm:w-5! text-gray-600" />
-//             ) : (
-//               <ChevronDown className="h-3! w-3! sm:h-5! sm:w-5! text-gray-600" />
-//             )}
-//           </div>
-//         </div>
-//       </button>
-
-//       {/* コンテンツ - ミニマルなグリッド */}
-//       <div
-//         className={`
-//         transition-all duration-500 ease-in-out overflow-hidden
-//         ${shouldShowContent ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-//       `}
-//       >
-//         <div className="p-2">
-//           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-//             {/* 未消費の総食品数 */}
-//             <div className="bg-white p-2 sm:p-5 rounded-xl border border-gray-200 hover:shadow-md transition-all duration-300 hover:border-gray-300">
-//               <div className="flex items-center justify-between">
-//                 <div>
-//                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-//                     未消費
-//                   </p>
-//                   <p className="text-xl font-bold text-gray-900 mt-2">
-//                     {stats.active}
-//                   </p>
-//                   <p className="text-xs text-gray-400 mt-1">全食品</p>
-//                 </div>
-//                 <div className="p-1 sm:p-3 bg-blue-50 rounded-lg">
-//                   <div className="text-xl text-blue-600">📦</div>
-//                 </div>
-//               </div>
-//             </div>

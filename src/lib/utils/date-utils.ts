@@ -19,9 +19,23 @@ export function getEndOfDaysLater(days: number): Date {
 export function getDaysRemaining(expiryDate: Date | null): number | null {
   if (!expiryDate) return null;
 
-  const today = getStartOfDay(new Date());
-  const expiry = getStartOfDay(new Date(expiryDate));
-  const diffTime = expiry.getTime() - today.getTime();
+  // 日本時間で今日の日付部分のみを取得
+  const today = new Date();
+  const todayYear = today.getFullYear();
+  const todayMonth = today.getMonth();
+  const todayDate = today.getDate();
+
+  // 期限日の日付部分のみを取得（日本時間として）
+  const expiry = new Date(expiryDate);
+  const expiryYear = expiry.getFullYear();
+  const expiryMonth = expiry.getMonth();
+  const expiryDateNum = expiry.getDate();
+
+  // 日付部分のみで比較
+  const todayPure = new Date(todayYear, todayMonth, todayDate);
+  const expiryPure = new Date(expiryYear, expiryMonth, expiryDateNum);
+
+  const diffTime = expiryPure.getTime() - todayPure.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
   return diffDays;
