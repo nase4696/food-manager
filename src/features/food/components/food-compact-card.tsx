@@ -1,12 +1,13 @@
 "use client";
 
 import type { FoodDisplay } from "@/types/food";
+import { getDaysRemaining as getDaysRemainingUtil } from "@/lib/utils/date-utils";
 
 import { getFoodStatusStyles } from "../utils/food-utils";
 
-interface FoodCompactCardProps {
+type FoodCompactCardProps = {
   food: FoodDisplay;
-}
+};
 
 export function FoodCompactCard({ food }: FoodCompactCardProps) {
   const styles = getFoodStatusStyles(food.expiryDate);
@@ -15,14 +16,12 @@ export function FoodCompactCard({ food }: FoodCompactCardProps) {
   const getDaysRemaining = (expiryDate: Date | null): string => {
     if (!expiryDate) return "期限未設定";
 
-    const today = new Date();
-    const expiry = new Date(expiryDate);
-    const diffTime = expiry.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const days = getDaysRemainingUtil(expiryDate);
 
-    if (diffDays < 0) return "期限切れ";
-    if (diffDays === 0) return "今日まで";
-    return `残${diffDays}日`;
+    if (days === null) return "期限未設定";
+    if (days < 0) return "期限切れ";
+    if (days === 0) return "今日まで";
+    return `残${days}日`;
   };
 
   const daysText = getDaysRemaining(food.expiryDate);

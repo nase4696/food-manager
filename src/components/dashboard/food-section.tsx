@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, ArrowRight } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import type { FoodDisplay } from "@/types/food";
 import { FoodCompactCard } from "@/features/food/components/food-compact-card";
 
 import { Button } from "../ui/button";
 
-interface FoodSectionProps {
+type FoodSectionProps = {
   foods: FoodDisplay[];
   title: string;
   description: string;
@@ -17,7 +17,7 @@ interface FoodSectionProps {
   emptyMessage: string;
   emptyDescription: string;
   defaultExpanded?: boolean;
-}
+};
 
 export function FoodSection({
   foods,
@@ -37,12 +37,10 @@ export function FoodSection({
     yellow: "bg-yellow-500",
   };
 
-  const displayFoods = isExpanded ? foods : [];
-
   return (
     <section className="mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
       <Button
-        className="p-2 sm:p-4 md:p-6 border-b border-gray-100 rounded-t-2xl"
+        className="p-2 sm:p-4 md:p-6 border-b border-gray-100 rounded-t-2xl justify-between"
         onClick={() => setIsExpanded(!isExpanded)}
         size="full"
         variant="sectionHeader"
@@ -76,46 +74,33 @@ export function FoodSection({
         </div>
       </Button>
 
-      {/* コンテンツ */}
+      {/* 改善されたコンテンツ部分 */}
       <div
         className={`
-        transition-all duration-500 ease-in-out overflow-hidden
-        ${isExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}
-      `}
+          grid transition-all duration-300 ease-in-out
+          ${isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}
+        `}
       >
-        <div className="p-4 sm:p-6">
-          {foods.length > 0 ? (
-            <>
+        <div className="overflow-hidden min-h-0">
+          <div className="p-3 sm:p-6">
+            {foods.length > 0 ? (
               <div className="space-y-3 mb-4 sm:mb-6 max-w-full overflow-hidden">
-                {displayFoods.map((food) => (
+                {foods.map((food) => (
                   <FoodCompactCard food={food} key={food.id} />
                 ))}
               </div>
-
-              {/* 全て見るリンク */}
-              {foods.length > 0 && (
-                <div className="text-center">
-                  <a
-                    className="inline-flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base"
-                    href="/products"
-                  >
-                    <span>全ての食品を見る</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </a>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="text-center py-6 sm:py-8">
-              <div className="text-3xl sm:text-4xl mb-3">🎉</div>
-              <p className="text-gray-700 font-medium text-base sm:text-lg">
-                {emptyMessage}
-              </p>
-              <p className="text-gray-500 text-xs sm:text-sm mt-1">
-                {emptyDescription}
-              </p>
-            </div>
-          )}
+            ) : (
+              <div className="text-center py-6 sm:py-8">
+                <div className="text-3xl sm:text-4xl mb-3">🎉</div>
+                <p className="text-gray-700 font-medium text-base sm:text-lg">
+                  {emptyMessage}
+                </p>
+                <p className="text-gray-500 text-xs sm:text-sm mt-1">
+                  {emptyDescription}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </section>

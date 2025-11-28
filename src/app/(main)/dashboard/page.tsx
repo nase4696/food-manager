@@ -3,11 +3,11 @@ import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { FoodSection } from "@/components/dashboard/food-section";
 
 export default async function DashboardPage() {
-  const { stats, expiringFoods, expiredFoods } = await getExpiryStatusStats();
+  const { stats, expiringFoods, warningFoods, expiredFoods } =
+    await getExpiryStatusStats();
 
   return (
     <div className="min-h-screen p-4 md:p-6 bg-gray-50">
-      {/* ページヘッダー */}
       <div className="mb-8 text-center md:text-left">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           食品管理ダッシュボード
@@ -17,13 +17,11 @@ export default async function DashboardPage() {
         </p>
       </div>
 
-      {/* 統計概要 */}
       <StatsOverview stats={stats} />
 
-      {/* 期限切れの食品 - デフォルトで閉じる */}
       <FoodSection
         badgeColor="red"
-        defaultExpanded={false} // 追加
+        defaultExpanded={false}
         description="期限が切れている食品"
         emptyDescription="素晴らしい管理です！"
         emptyMessage="期限切れの食品はありません"
@@ -32,16 +30,26 @@ export default async function DashboardPage() {
         title="期限切れの食品"
       />
 
-      {/* 期限間近の食品 */}
       <FoodSection
         badgeColor="orange"
-        defaultExpanded={false} // 追加
+        defaultExpanded={false}
         description="3日以内に期限が切れる食品"
         emptyDescription="安心してください！"
         emptyMessage="期限間近の食品はありません"
         foods={expiringFoods}
         icon="⚠️"
         title="期限間近の食品"
+      />
+
+      <FoodSection
+        badgeColor="yellow"
+        defaultExpanded={false}
+        description="4〜7日以内に期限が切れる食品"
+        emptyDescription="良い状態です！"
+        emptyMessage="要注意の食品はありません"
+        foods={warningFoods}
+        icon="📋"
+        title="要注意の食品"
       />
     </div>
   );
