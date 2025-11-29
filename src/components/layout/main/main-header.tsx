@@ -23,7 +23,7 @@ export function MainHeader() {
   const isDashboard = pathname === "/dashboard";
 
   return (
-    <header className="container mx-auto flex items-center gap-2 px-2 md:px-4 py-3">
+    <header className="flex items-center bg-white md:bg-transparent shadow-sm md:shadow-none gap-2 px-2 md:px-4 py-3">
       <div className="grid grid-cols-3 w-full items-center md:hidden">
         <div className="flex justify-start">
           {!isDashboard && (
