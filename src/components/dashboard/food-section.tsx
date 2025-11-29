@@ -5,7 +5,7 @@ import { FoodCompactCard } from "@/features/food/components/food-compact-card";
 
 import { SectionAccordion } from "./section-accordion";
 
-interface FoodSectionProps {
+type FoodSectionProps = {
   foods: FoodDisplay[];
   title: string;
   description: string;
@@ -14,7 +14,7 @@ interface FoodSectionProps {
   emptyMessage: string;
   emptyDescription: string;
   defaultExpanded?: boolean;
-}
+};
 
 export function FoodSection({
   foods,

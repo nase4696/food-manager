@@ -1,6 +1,8 @@
 "use client";
 
-interface CategoryContentProps {
+import { getCategoryEmoji, getCategoryColor } from "@/constants/categories";
+
+type CategoryContentProps = {
   stats: Array<{
     id: string;
     name: string;
@@ -9,34 +11,6 @@ interface CategoryContentProps {
     description: string;
   }>;
   totalItems: number;
-}
-
-// カテゴリーごとの絵文字マップ
-const CATEGORY_EMOJIS: Record<string, string> = {
-  野菜: "🥬",
-  果物: "🍎",
-  肉: "🍖",
-  魚: "🐟",
-  乳製品: "🥛",
-  飲料: "🧃",
-  調味料: "🧂",
-  インスタント: "🍜",
-  スイーツ: "🍰",
-  穀物: "🌾",
-};
-
-// デフォルトのカテゴリー色
-const DEFAULT_CATEGORY_COLORS: Record<string, string> = {
-  野菜: "#22C55E",
-  果物: "#F59E0B",
-  肉: "#EF4444",
-  魚: "#3B82F6",
-  乳製品: "#EAB308",
-  飲料: "#06B6D4",
-  調味料: "#8B5CF6",
-  インスタント: "#F97316",
-  スイーツ: "#EC4899",
-  穀物: "#A16207",
 };
 
 export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
@@ -54,9 +28,9 @@ export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
     <div className="space-y-3 sm:space-y-4">
       {filteredAndSortedStats.map((category) => {
         const percentage = getPercentage(category.count);
-        const emoji = CATEGORY_EMOJIS[category.name] || "📦";
-        const color =
-          category.color || DEFAULT_CATEGORY_COLORS[category.name] || "#6B7280";
+        // 一元化した関数を使用
+        const emoji = getCategoryEmoji(category.name);
+        const color = category.color || getCategoryColor(category.name);
 
         return (
           <div

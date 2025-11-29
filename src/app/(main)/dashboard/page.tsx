@@ -13,16 +13,7 @@ export default async function DashboardPage() {
   const categoryStats = await getCategoryStats();
 
   return (
-    <div className="min-h-screen p-4 md:p-6 bg-gray-50">
-      <div className="mb-8 text-center md:text-left">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-          食品管理ダッシュボード
-        </h1>
-        <p className="text-gray-600 mt-3 text-lg">
-          今日も食品ロスを減らしましょう 🍎
-        </p>
-      </div>
-
+    <div className="min-h-screen p-2 md:p-6">
       <StatsOverview stats={stats} />
 
       <FoodSection

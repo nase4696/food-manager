@@ -7,9 +7,9 @@ import { STATS_CONFIG } from "@/constants/stats";
 
 import { SectionAccordion } from "./section-accordion";
 
-interface StatsOverviewProps {
+type StatsOverviewProps = {
   stats: ExpiryStats;
-}
+};
 
 export function StatsOverview({ stats }: StatsOverviewProps) {
   const totalActive = stats.active;
@@ -18,7 +18,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
     <SectionAccordion
       badge={{
         count: totalActive,
-        color: "green",
+        color: "blue",
       }}
       defaultExpanded={true}
       description="食品の期限状態を確認"
