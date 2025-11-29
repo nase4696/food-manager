@@ -309,3 +309,46 @@ export async function getExpiryStatusStats(): Promise<{
     expiredFoods,
   };
 }
+
+export async function getCategoryStats() {
+  const session = await getServerSession();
+
+  if (!session || !session.user) {
+    redirect("/login");
+  }
+
+  try {
+    // カテゴリーごとの未消費食品数を集計
+    const categoryStats = await prisma.category.findMany({
+      include: {
+        foods: {
+          where: {
+            userId: session.user.id,
+            isConsumed: false,
+          },
+          select: {
+            id: true, // カウントだけ必要なのでidのみ選択
+          },
+        },
+      },
+      orderBy: {
+        name: "asc",
+      },
+    });
+
+    // 必要なデータだけ整形
+    const formattedStats = categoryStats.map((category) => ({
+      id: category.id,
+      name: category.name,
+      count: category.foods.length,
+      color: category.color || "#6B7280", // デフォルト色
+      description: category.description || "",
+    }));
+
+    console.log(`✅ カテゴリー統計を${formattedStats.length}件取得しました`);
+    return formattedStats;
+  } catch (error) {
+    console.error("❌ カテゴリー統計の取得に失敗:", error);
+    return [];
+  }
+}

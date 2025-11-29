@@ -1,10 +1,16 @@
-import { getExpiryStatusStats } from "@/lib/food/food-data-fetcher";
+import {
+  getCategoryStats,
+  getExpiryStatusStats,
+} from "@/lib/food/food-data-fetcher";
 import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { FoodSection } from "@/components/dashboard/food-section";
+import { CategoryStats } from "@/components/dashboard/category-stats";
 
 export default async function DashboardPage() {
   const { stats, expiringFoods, warningFoods, expiredFoods } =
     await getExpiryStatusStats();
+
+  const categoryStats = await getCategoryStats();
 
   return (
     <div className="min-h-screen p-4 md:p-6 bg-gray-50">
@@ -33,7 +39,7 @@ export default async function DashboardPage() {
       <FoodSection
         badgeColor="orange"
         defaultExpanded={false}
-        description="3日以内に期限が切れる食品"
+        description="期限が3日以内の食品"
         emptyDescription="安心してください！"
         emptyMessage="期限間近の食品はありません"
         foods={expiringFoods}
@@ -44,13 +50,15 @@ export default async function DashboardPage() {
       <FoodSection
         badgeColor="yellow"
         defaultExpanded={false}
-        description="4〜7日以内に期限が切れる食品"
+        description="期限が4〜7日以内の食品"
         emptyDescription="良い状態です！"
         emptyMessage="要注意の食品はありません"
         foods={warningFoods}
         icon="📋"
         title="要注意の食品"
       />
+
+      <CategoryStats stats={categoryStats} />
     </div>
   );
 }
