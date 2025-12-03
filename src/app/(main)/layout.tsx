@@ -16,10 +16,8 @@ export default function MainLayout({
         </div>
         <div className="flex-1 flex flex-col items-center">
           <div className="w-full max-w-6xl">
-            <div className="mb-2">
-              <MainHeader />
-            </div>
-            <main className="flex-1 pb-16 md:pb-0">{children}</main>
+            <MainHeader />
+            <main className="flex-1 pt-2 pb-16 md:pb-0">{children}</main>
           </div>
           <div className="md:hidden">
             <BottomNavigation />
