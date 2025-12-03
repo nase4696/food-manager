@@ -48,9 +48,7 @@ export function StatsOverview({ stats }: StatsOverviewProps) {
               <div
                 className={`p-1 sm:p-2 md:p-3 ${stat.bgColor} rounded-lg shrink-0 ml-2`}
               >
-                <div
-                  className={`text-base sm:text-lg md:text-xl ${stat.textColor}`}
-                >
+                <div className={`text-lg md:text-xl ${stat.textColor}`}>
                   {stat.icon}
                 </div>
               </div>

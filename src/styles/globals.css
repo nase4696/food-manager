@@ -65,7 +65,7 @@
   --destructive: #f44336;
   --border: #c8e6c9;
   --input: #e8f5e9;
-  --ring: #2e7d32;
+  --ring: hsl(123, 88%, 48%);
   --chart-1: #2e7d32;
   --chart-2: #ff9800;
   --chart-3: #2196f3;

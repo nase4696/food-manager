@@ -4,7 +4,7 @@ import {
 } from "@/lib/food/food-data-fetcher";
 import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { FoodSection } from "@/components/dashboard/food-section";
-import { CategoryStats } from "@/components/dashboard/category-stats";
+import { CategoryPieChart } from "@/features/category/components/chart/category-pie-chart";
 
 export default async function DashboardPage() {
   const { stats, expiringFoods, warningFoods, expiredFoods } =
@@ -12,9 +12,23 @@ export default async function DashboardPage() {
 
   const categoryStats = await getCategoryStats();
 
+  // 円グラフ用のデータを作成
+  const pieChartData = categoryStats
+    .filter((stat) => stat.count > 0) // 0個のカテゴリーは除外
+    .map((stat) => ({
+      name: stat.name,
+      value: stat.count,
+      color: stat.color,
+    }));
+
   return (
     <div className="min-h-screen p-2 md:p-6">
       <StatsOverview stats={stats} />
+
+      {/* 円グラフを追加 */}
+      <div className="mb-2 md:mb-6">
+        <CategoryPieChart data={pieChartData} />
+      </div>
 
       <FoodSection
         badgeColor="red"
@@ -27,6 +41,7 @@ export default async function DashboardPage() {
         title="期限切れの食品"
       />
 
+      {/* 他のセクション */}
       <FoodSection
         badgeColor="orange"
         defaultExpanded={false}
@@ -48,8 +63,6 @@ export default async function DashboardPage() {
         icon="📋"
         title="要注意の食品"
       />
-
-      <CategoryStats stats={categoryStats} />
     </div>
   );
 }

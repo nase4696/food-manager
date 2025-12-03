@@ -29,7 +29,7 @@ export function FoodCompactCard({ food }: FoodCompactCardProps) {
   return (
     <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-200">
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div className="p-2 bg-gray-100 rounded-lg">
+        <div aria-hidden="true" className="p-2 bg-gray-100 rounded-lg">
           <div className="text-base">
             {getCategoryEmoji(food.category.name)}
           </div>
@@ -40,11 +40,11 @@ export function FoodCompactCard({ food }: FoodCompactCardProps) {
           </h3>
           <div className="flex items-center gap-2 text-xs text-gray-600 mt-1">
             <span className="flex items-center gap-1">
-              <span>🏠</span>
+              <span aria-hidden="true">🏠</span>
               <span className="truncate">{food.storage.name}</span>
             </span>
             <span className="hidden sm:flex items-center gap-1">
-              <span>🏷️</span>
+              <span aria-hidden="true">🏷️</span>
               <span>{food.category.name}</span>
             </span>
           </div>
