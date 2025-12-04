@@ -17,6 +17,7 @@ type SectionAccordionProps = {
   };
   children: React.ReactNode;
   defaultExpanded?: boolean;
+  showBadge?: boolean;
 };
 
 const badgeColorClasses = {
@@ -29,7 +30,7 @@ const badgeColorClasses = {
 };
 
 const iconGradientClasses = {
-  purple: "bg-gradient-to-br from-purple-500 to-purple-600",
+  purple: "bg-gradient-to-br from-purple-100 to-purple-200",
   orange: "bg-gradient-to-br from-orange-100 to-orange-200",
   red: "bg-gradient-to-br from-red-100 to-red-200",
   yellow: "bg-gradient-to-br from-yellow-100 to-yellow-200",
@@ -44,6 +45,7 @@ export function SectionAccordion({
   badge,
   children,
   defaultExpanded = false,
+  showBadge = true,
 }: SectionAccordionProps) {
   return (
     <Accordion
@@ -71,11 +73,13 @@ export function SectionAccordion({
               </div>
             </div>
             <div className="flex items-center gap-3 shrink-0 ml-4">
-              <span
-                className={`${badgeColorClasses[badge.color]} text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium min-w-12 text-center`}
-              >
-                {badge.count}品
-              </span>
+              {showBadge && (
+                <span
+                  className={`${badgeColorClasses[badge.color]} text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium min-w-12 text-center`}
+                >
+                  {badge.count}品
+                </span>
+              )}
             </div>
           </div>
         </AccordionTrigger>

@@ -1,12 +1,12 @@
 "use client";
 
-interface CategoryStatsProps {
+type CategoryStatsProps = {
   mostCommonCategory: {
     name: string;
   };
   totalItems: number;
   categoryCount: number;
-}
+};
 
 export function CategoryStats({
   mostCommonCategory,
