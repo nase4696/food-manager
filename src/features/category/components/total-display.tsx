@@ -1,8 +1,6 @@
-"use client";
-
-interface TotalDisplayProps {
+type TotalDisplayProps = {
   total: number;
-}
+};
 
 export function TotalDisplay({ total }: TotalDisplayProps) {
   return (

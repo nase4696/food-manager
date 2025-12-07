@@ -1,22 +1,19 @@
-"use client";
-
-type CategoryItem = {
+type DataListItem = {
   name: string;
   value: number;
   color: string;
   percentage: string;
 };
 
-interface CategoryListProps {
-  items: CategoryItem[];
-}
+type DataListProps = {
+  items: DataListItem[];
+  title?: string;
+};
 
-export function CategoryList({ items }: CategoryListProps) {
+export function DataList({ items, title = "詳細" }: DataListProps) {
   return (
     <div className="border-2 border-gray-200 rounded-xl p-2 h-full overflow-hidden flex flex-col">
-      <h3 className="text-base font-semibold mb-3 text-gray-900">
-        カテゴリー詳細
-      </h3>
+      <h3 className="text-base font-semibold mb-3 text-gray-900">{title}</h3>
       <div className="space-y-2 overflow-y-auto pr-2 flex-1">
         {items.map((item) => (
           <div

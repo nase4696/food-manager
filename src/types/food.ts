@@ -18,11 +18,11 @@ export type FoodDisplay = Pick<Food, "id" | "name" | "expiryDate"> & {
 };
 
 // 統計データ型
-export interface ExpiryStats {
+export type ExpiryStats = {
   active: number; // 未消費の総食品数
   warning: number; // 要注意（4-7日）
   expiringSoon: number; // 期限間近（3日以内）
   expired: number; // 期限切れ
-}
+};
 
 export type FoodStatus = "safe" | "warning" | "urgent" | "expired";

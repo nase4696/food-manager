@@ -1,9 +1,5 @@
-"use client";
-
 type CategoryStatsProps = {
-  mostCommonCategory: {
-    name: string;
-  };
+  mostCommonCategory: string;
   totalItems: number;
   categoryCount: number;
 };
@@ -15,6 +11,10 @@ export function CategoryStats({
 }: CategoryStatsProps) {
   const average = Math.round(totalItems / categoryCount);
 
+  if (!mostCommonCategory) {
+    return null;
+  }
+
   return (
     <div className="mt-4 p-3 bg-blue-50 rounded-lg">
       <h4 className="font-semibold text-blue-900 text-sm mb-2">
@@ -24,7 +24,7 @@ export function CategoryStats({
         <div className="bg-white p-2 rounded">
           <p className="text-blue-700">最多カテゴリー</p>
           <p className="font-semibold text-blue-900 truncate">
-            {mostCommonCategory.name}
+            {mostCommonCategory}
           </p>
         </div>
         <div className="bg-white p-2 rounded">
