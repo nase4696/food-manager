@@ -5,19 +5,20 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/components/ui/accordion/accordion";
 
 type SectionAccordionProps = {
   title: string;
   description: string;
   icon: React.ReactNode;
-  badge: {
+  badge?: {
     count: number;
     color: "purple" | "orange" | "red" | "yellow" | "green" | "blue";
   };
   children: React.ReactNode;
   defaultExpanded?: boolean;
   showBadge?: boolean;
+  iconBgColor?: "purple" | "orange" | "red" | "yellow" | "green" | "blue";
 };
 
 const badgeColorClasses = {
@@ -34,8 +35,8 @@ const iconGradientClasses = {
   orange: "bg-gradient-to-br from-orange-100 to-orange-200",
   red: "bg-gradient-to-br from-red-100 to-red-200",
   yellow: "bg-gradient-to-br from-yellow-100 to-yellow-200",
-  green: "bg-gradient-to-br from-green-500 to-green-600",
-  blue: "bg-gradient-to-br from-blue-500 to-blue-600",
+  green: "bg-gradient-to-br from-green-100 to-green-200",
+  blue: "bg-gradient-to-br from-blue-100 to-blue-200",
 };
 
 export function SectionAccordion({
@@ -46,7 +47,10 @@ export function SectionAccordion({
   children,
   defaultExpanded = false,
   showBadge = true,
+  iconBgColor = "blue",
 }: SectionAccordionProps) {
+  const color = badge?.color || iconBgColor;
+
   return (
     <Accordion
       className="mb-2 md:mb-6 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
@@ -59,7 +63,7 @@ export function SectionAccordion({
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
               <div
-                className={`p-2 sm:p-3 ${iconGradientClasses[badge.color]} rounded-xl`}
+                className={`p-2 sm:p-3 ${iconGradientClasses[color]} rounded-xl`}
               >
                 <div className="text-xl sm:text-2xl text-white">{icon}</div>
               </div>
@@ -73,7 +77,7 @@ export function SectionAccordion({
               </div>
             </div>
             <div className="flex items-center gap-3 shrink-0 ml-4">
-              {showBadge && (
+              {showBadge && badge && (
                 <span
                   className={`${badgeColorClasses[badge.color]} text-white px-3 py-1 rounded-full text-xs sm:text-sm font-medium min-w-12 text-center`}
                 >

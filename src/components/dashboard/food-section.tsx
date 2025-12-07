@@ -3,7 +3,7 @@
 import type { FoodDisplay } from "@/types/food";
 import { FoodCompactCard } from "@/features/food/components/food-compact-card";
 
-import { SectionAccordion } from "./section-accordion";
+import { SectionAccordion } from "../ui/accordion/section-accordion";
 
 type FoodSectionProps = {
   foods: FoodDisplay[];

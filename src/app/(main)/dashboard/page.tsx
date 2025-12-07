@@ -1,20 +1,23 @@
 import {
   getCategoryStats,
-  getExpiryStatusStats,
+  getExpiryDistribution,
+  getFoodsByExpiry,
 } from "@/lib/food/food-data-fetcher";
-import { StatsOverview } from "@/components/dashboard/stats-overview";
+import { ExpiryDistributionChart } from "@/components/dashboard/expiry-distribution-chart";
 import { FoodSection } from "@/components/dashboard/food-section";
 import { CategoryPieChart } from "@/features/category/components/chart/category-pie-chart";
 
 export default async function DashboardPage() {
-  const { stats, expiringFoods, warningFoods, expiredFoods } =
-    await getExpiryStatusStats();
+  const [expiryDistribution, foodLists, categoryStats] = await Promise.all([
+    getExpiryDistribution(),
+    getFoodsByExpiry(),
+    getCategoryStats(),
+  ]);
 
-  const categoryStats = await getCategoryStats();
+  const { expiringFoods, warningFoods, expiredFoods } = foodLists;
 
-  // 円グラフ用のデータを作成
   const pieChartData = categoryStats
-    .filter((stat) => stat.count > 0) // 0個のカテゴリーは除外
+    .filter((stat) => stat.count > 0)
     .map((stat) => ({
       name: stat.name,
       value: stat.count,
@@ -22,13 +25,8 @@ export default async function DashboardPage() {
     }));
 
   return (
-    <div className="min-h-screen p-2 md:p-6">
-      <StatsOverview stats={stats} />
-
-      {/* 円グラフを追加 */}
-      <div className="mb-2 md:mb-6">
-        <CategoryPieChart data={pieChartData} />
-      </div>
+    <div className="min-h-screen p-2 md:p-6 space-y-4 md:space-y-6">
+      <ExpiryDistributionChart data={expiryDistribution} />
 
       <FoodSection
         badgeColor="red"
@@ -41,7 +39,6 @@ export default async function DashboardPage() {
         title="期限切れの食品"
       />
 
-      {/* 他のセクション */}
       <FoodSection
         badgeColor="orange"
         defaultExpanded={false}
@@ -63,6 +60,8 @@ export default async function DashboardPage() {
         icon="📋"
         title="要注意の食品"
       />
+
+      <CategoryPieChart data={pieChartData} />
     </div>
   );
 }
