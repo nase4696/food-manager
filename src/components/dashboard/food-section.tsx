@@ -10,7 +10,7 @@ type FoodSectionProps = {
   title: string;
   description: string;
   icon: string;
-  badgeColor: "orange" | "red" | "yellow";
+  badgeColor: "orange" | "red" | "yellow" | "blue" | "green";
   emptyMessage: string;
   emptyDescription: string;
   defaultExpanded?: boolean;

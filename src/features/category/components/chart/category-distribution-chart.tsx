@@ -11,15 +11,15 @@ import { CategoryStats } from "../category-stats";
 import { TotalDisplay } from "../total-display";
 import { findMostCommonCategory } from "../../utils/category-calculations";
 
-type CategoryPieChartProps = {
+type CategoryDistributionChartProps = {
   data: Array<{ name: string; value: number; color: string }>;
   defaultExpanded?: boolean;
 };
 
-export function CategoryPieChart({
+export function CategoryDistributionChart({
   data,
   defaultExpanded = true,
-}: CategoryPieChartProps) {
+}: CategoryDistributionChartProps) {
   const total = calculateTotal(data);
 
   if (data.length === 0) {

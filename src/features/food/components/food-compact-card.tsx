@@ -1,30 +1,19 @@
 "use client";
 
 import type { FoodDisplay } from "@/types/food";
-import { getDaysRemaining as getDaysRemainingUtil } from "@/lib/utils/date-utils";
+import { formatDaysRemaining } from "@/lib/utils/date-utils";
 import { getCategoryEmoji } from "@/constants/categories";
 
 import { getFoodStatusStyles } from "../utils/food-utils";
 
-interface FoodCompactCardProps {
+type FoodCompactCardProps = {
   food: FoodDisplay;
-}
+};
 
 export function FoodCompactCard({ food }: FoodCompactCardProps) {
   const styles = getFoodStatusStyles(food.expiryDate);
 
-  const getDaysRemaining = (expiryDate: Date | null): string => {
-    if (!expiryDate) return "期限未設定";
-
-    const days = getDaysRemainingUtil(expiryDate);
-
-    if (days === null) return "期限未設定";
-    if (days < 0) return "期限切れ";
-    if (days === 0) return "今日まで";
-    return `残${days}日`;
-  };
-
-  const daysText = getDaysRemaining(food.expiryDate);
+  const daysText = formatDaysRemaining(food.expiryDate);
 
   return (
     <div className="flex items-center justify-between p-3 bg-white rounded-xl border border-gray-200">
