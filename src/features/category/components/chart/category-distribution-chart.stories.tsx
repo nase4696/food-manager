@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { CategoryPieChart } from "./category-pie-chart";
+import { CategoryDistributionChart } from "./category-distribution-chart";
 
 const meta = {
   title: "features/category/components/chart/category-pie-chart",
-  component: CategoryPieChart,
+  component: CategoryDistributionChart,
   parameters: {
     layout: "padded", // centered → padded に変更
   },
   tags: ["autodocs"],
-} satisfies Meta<typeof CategoryPieChart>;
+} satisfies Meta<typeof CategoryDistributionChart>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

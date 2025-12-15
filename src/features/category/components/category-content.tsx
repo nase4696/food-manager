@@ -2,6 +2,8 @@
 
 import { getCategoryEmoji, getCategoryColor } from "@/constants/categories";
 
+import { calculatePercentage } from "../utils/category-calculations";
+
 type CategoryContentProps = {
   stats: Array<{
     id: string;
@@ -14,12 +16,6 @@ type CategoryContentProps = {
 };
 
 export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
-  // 割合を計算（%）
-  const getPercentage = (count: number) => {
-    if (totalItems === 0) return 0;
-    return Math.round((count / totalItems) * 100);
-  };
-
   const filteredAndSortedStats = stats
     .filter((category) => category.count > 0)
     .sort((a, b) => b.count - a.count);
@@ -27,8 +23,7 @@ export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
   return (
     <div className="space-y-3 sm:space-y-4">
       {filteredAndSortedStats.map((category) => {
-        const percentage = getPercentage(category.count);
-        // 一元化した関数を使用
+        const percentage = calculatePercentage(category.count, totalItems);
         const emoji = getCategoryEmoji(category.name);
         const color = category.color || getCategoryColor(category.name);
 
@@ -44,7 +39,6 @@ export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-                {/* カテゴリー絵文字 */}
                 <div
                   className="p-2 sm:p-3 rounded-xl text-base sm:text-lg transition-transform duration-300 group-hover:scale-110"
                   style={{ backgroundColor: `${color}20` }}
@@ -52,7 +46,6 @@ export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
                   {emoji}
                 </div>
 
-                {/* カテゴリー情報 */}
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 sm:gap-3">
                     <h3 className="font-semibold text-gray-900 text-sm sm:text-base truncate">
@@ -73,7 +66,6 @@ export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
                 </div>
               </div>
 
-              {/* 割合表示 */}
               <div className="text-right shrink-0 ml-2 sm:ml-4">
                 <div className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                   {percentage}%
@@ -84,7 +76,6 @@ export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
               </div>
             </div>
 
-            {/* プログレスバー（モバイル用） */}
             <div className="mt-2 sm:mt-3 md:hidden">
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div
@@ -100,7 +91,6 @@ export function CategoryContent({ stats, totalItems }: CategoryContentProps) {
         );
       })}
 
-      {/* 合計表示 */}
       <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-gray-200">
         <div className="flex justify-between items-center text-sm">
           <span className="text-gray-600">全カテゴリー合計</span>

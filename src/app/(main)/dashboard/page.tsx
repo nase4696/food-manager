@@ -1,67 +1,56 @@
-import {
-  getCategoryStats,
-  getExpiryDistribution,
-  getFoodsByExpiry,
-} from "@/lib/food/food-data-fetcher";
+import { getDashboardData } from "@/server/food/services/dashboard-service";
 import { ExpiryDistributionChart } from "@/components/dashboard/expiry-distribution-chart";
 import { FoodSection } from "@/components/dashboard/food-section";
-import { CategoryPieChart } from "@/features/category/components/chart/category-pie-chart";
+import { CategoryDistributionChart } from "@/features/category/components/chart/category-distribution-chart";
+import { FOOD_STATUSES_BY_PRIORITY } from "@/constants/food-status";
+import { DASHBOARD_CONFIG } from "@/constants/dashboard";
+
+function measurePerformance() {
+  if (process.env.NODE_ENV === "development") {
+    console.time("ダッシュボードページ読み込み");
+    return () => console.timeEnd("ダッシュボードページ読み込み");
+  }
+  return () => {};
+}
 
 export default async function DashboardPage() {
-  const [expiryDistribution, foodLists, categoryStats] = await Promise.all([
-    getExpiryDistribution(),
-    getFoodsByExpiry(),
-    getCategoryStats(),
-  ]);
+  const endMeasurement = measurePerformance();
 
-  const { expiringFoods, warningFoods, expiredFoods } = foodLists;
+  const { foodLists, expiryDistribution, categoryDistribution } =
+    await getDashboardData();
 
-  const pieChartData = categoryStats
-    .filter((stat) => stat.count > 0)
-    .map((stat) => ({
-      name: stat.name,
-      value: stat.count,
-      color: stat.color,
-    }));
+  endMeasurement();
 
   return (
     <div className="min-h-screen p-2 md:p-6 space-y-4 md:space-y-6">
       <ExpiryDistributionChart data={expiryDistribution} />
 
-      <FoodSection
-        badgeColor="red"
-        defaultExpanded={false}
-        description="期限が切れている食品"
-        emptyDescription="素晴らしい管理です！"
-        emptyMessage="期限切れの食品はありません"
-        foods={expiredFoods}
-        icon="🚫"
-        title="期限切れの食品"
-      />
+      {FOOD_STATUSES_BY_PRIORITY.map((status) => {
+        const foods = foodLists[status.id] || [];
 
-      <FoodSection
-        badgeColor="orange"
-        defaultExpanded={false}
-        description="期限が3日以内の食品"
-        emptyDescription="安心してください！"
-        emptyMessage="期限間近の食品はありません"
-        foods={expiringFoods}
-        icon="⚠️"
-        title="期限間近の食品"
-      />
+        const shouldHide =
+          DASHBOARD_CONFIG.hideEmptySections &&
+          foods.length === 0 &&
+          !DASHBOARD_CONFIG.alwaysShowStatuses.includes(status.id);
 
-      <FoodSection
-        badgeColor="yellow"
-        defaultExpanded={false}
-        description="期限が4〜7日以内の食品"
-        emptyDescription="良い状態です！"
-        emptyMessage="要注意の食品はありません"
-        foods={warningFoods}
-        icon="📋"
-        title="要注意の食品"
-      />
+        if (shouldHide) return null;
 
-      <CategoryPieChart data={pieChartData} />
+        return (
+          <FoodSection
+            badgeColor={status.badgeColor}
+            defaultExpanded={status.id === "expired" || status.id === "urgent"}
+            description={status.description}
+            emptyDescription={status.emptyDescription}
+            emptyMessage={status.emptyMessage}
+            foods={foods}
+            icon={status.icon}
+            key={status.id}
+            title={`${status.label}の食品`}
+          />
+        );
+      })}
+
+      <CategoryDistributionChart data={categoryDistribution} />
     </div>
   );
 }

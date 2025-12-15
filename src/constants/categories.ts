@@ -95,7 +95,6 @@ export const CATEGORY_IDS = {
 } as const;
 
 export type CategoryConfig = (typeof CATEGORIES_CONFIG)[number];
-export type CategoryId = (typeof CATEGORY_IDS)[keyof typeof CATEGORY_IDS];
 
 export const getCategoryEmoji = (categoryName: string): string => {
   const category = CATEGORIES_CONFIG.find((cat) => cat.name === categoryName);

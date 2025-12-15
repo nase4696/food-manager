@@ -1,325 +1,124 @@
 import "server-only";
-import { redirect } from "next/navigation";
-
 import { prisma } from "@/lib/prisma";
-import { getStartOfDay, getEndOfDaysLater } from "@/lib/utils/date-utils";
+import { requireSession } from "@/lib/auth/require-session";
+import { getDaysRemaining } from "@/lib/utils/date-utils";
+import {
+  FOOD_STATUSES_BY_PRIORITY,
+  type FoodStatusId,
+} from "@/constants/food-status";
+import type { FoodDisplay, FoodWithRelations } from "@/types/food";
 
-import { getServerSession } from "../session";
+export type DashboardData = {
+  foodLists: Record<FoodStatusId, FoodDisplay[]>;
+  expiryDistribution: Array<{
+    name: string;
+    description: string;
+    value: number;
+    color: string;
+  }>;
+  categoryStats: Array<{
+    id: string;
+    name: string;
+    count: number;
+    color: string;
+  }>;
+  totalFoodCount: number;
+};
 
-export async function getWarningFoods() {
-  const session = await getServerSession();
-
-  if (!session || !session.user) {
-    redirect("/login");
-  }
-
-  const threeDaysLater = getEndOfDaysLater(4);
-  const sevenDaysLater = getEndOfDaysLater(7);
+export async function getDashboardData(): Promise<DashboardData> {
+  const session = await requireSession();
+  const userId = session.user.id;
 
   try {
-    const foods = await prisma.food.findMany({
+    // ✅ 1: 1回のクエリですべて取得（公式推奨）
+    console.time("DBクエリ実行");
+    const allFoods = await prisma.food.findMany({
       where: {
-        userId: session.user.id,
+        userId,
         isConsumed: false,
-        expiryDate: {
-          gte: threeDaysLater,
-          lte: sevenDaysLater,
-        },
       },
+      // ✅ includeで関連データを一括取得
       include: {
-        category: true,
-        storage: true,
+        category: true, // カテゴリーデータも一緒に
+        storage: true, // 保存場所データも一緒に
       },
       orderBy: {
         expiryDate: "asc",
       },
     });
+    console.timeEnd("DBクエリ実行");
 
-    console.log(`✅ 要注意食品を${foods.length}件取得しました`);
-    return foods;
-  } catch (error) {
-    console.error("❌ 要注意食品の取得に失敗:", error);
-    return [];
-  }
-}
+    const totalFoodCount = allFoods.length;
+    console.log(`✅ 全食品${totalFoodCount}件を1回のクエリで取得`);
 
-// 期限が近い食品を取得
-export async function getExpiringFoods(days: number) {
-  const session = await getServerSession();
-
-  if (!session || !session.user) {
-    redirect("/login");
-  }
-
-  console.log("ユーザー情報:", session.user);
-
-  const todayStart = getStartOfDay(new Date());
-  const targetDate = getEndOfDaysLater(days);
-
-  try {
-    const foods = await prisma.food.findMany({
-      where: {
-        userId: session.user.id,
-        isConsumed: false,
-        expiryDate: {
-          gte: todayStart,
-          lte: targetDate,
-        },
+    // ✅ 2: メモリ上で分類（高速）
+    console.time("メモリ分類");
+    const foodLists = FOOD_STATUSES_BY_PRIORITY.reduce(
+      (acc, status) => {
+        acc[status.id] = allFoods.filter((food) => {
+          if (!food.expiryDate) return false;
+          const days = getDaysRemaining(food.expiryDate);
+          return (
+            days !== null &&
+            days >= status.daysRange.min &&
+            days <= status.daysRange.max
+          );
+        });
+        return acc;
       },
-      include: {
-        category: true,
-        storage: true,
-      },
-      orderBy: {
-        expiryDate: "asc",
-      },
-    });
+      {} as Record<FoodStatusId, FoodWithRelations[]>,
+    );
+    console.timeEnd("メモリ分類");
 
-    console.log(`✅ ${days}日以内の食品を${foods.length}件取得しました`);
-    return foods;
-  } catch (error) {
-    console.error("❌ 食品データの取得に失敗:", error);
-    return [];
-  }
-}
-
-// 期限切れ食品を取得
-export async function getExpiredFoods() {
-  const session = await getServerSession();
-
-  if (!session || !session.user) {
-    redirect("/login");
-  }
-
-  const todayStart = getStartOfDay(new Date());
-
-  try {
-    const foods = await prisma.food.findMany({
-      where: {
-        userId: session.user.id,
-        isConsumed: false,
-        expiryDate: {
-          lt: todayStart,
-        },
-      },
-      include: {
-        category: true,
-        storage: true,
-      },
-      orderBy: {
-        expiryDate: "asc",
-      },
-    });
-
-    console.log(`✅ 期限切れ食品を${foods.length}件取得しました`);
-    return foods;
-  } catch (error) {
-    console.error("❌ 期限切れ食品の取得に失敗:", error);
-    return [];
-  }
-}
-
-// 期限切れていない未消費食品を全て取得
-export async function getAllActiveFoods() {
-  const session = await getServerSession();
-
-  if (!session || !session.user) {
-    redirect("/login");
-  }
-
-  const todayStart = getStartOfDay(new Date());
-
-  try {
-    const foods = await prisma.food.findMany({
-      where: {
-        userId: session.user.id,
-        isConsumed: false,
-        expiryDate: {
-          gte: todayStart,
-        },
-      },
-      include: {
-        category: true,
-        storage: true,
-      },
-      orderBy: {
-        expiryDate: "asc",
-      },
-    });
-
-    console.log(`✅ 期限切れていない未消費食品を${foods.length}件取得しました`);
-    return foods;
-  } catch (error) {
-    console.error("❌ 期限切れていない食品の取得に失敗:", error);
-    return [];
-  }
-}
-
-// 統計情報を取得
-export async function getFoodStats() {
-  const session = await getServerSession();
-
-  if (!session || !session.user) {
-    redirect("/login");
-  }
-
-  const todayStart = getStartOfDay(new Date());
-  const threeDaysLater = getEndOfDaysLater(3);
-
-  const [total, consumed, expiringSoon, expired, activeNotExpired] =
-    await Promise.all([
-      prisma.food.count({ where: { userId: session.user.id } }),
-      prisma.food.count({
-        where: { userId: session.user.id, isConsumed: true },
-      }),
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { gte: todayStart, lte: threeDaysLater },
-        },
-      }),
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { lt: todayStart },
-        },
-      }),
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { gte: todayStart },
-        },
-      }),
-    ]);
-
-  const stats = {
-    total,
-    consumed,
-    expiringSoon,
-    expired,
-    active: total - consumed,
-    activeNotExpired,
-    safe: activeNotExpired - expiringSoon,
-  };
-
-  console.log("✅ 統計情報を取得完了:", stats);
-  return stats;
-}
-
-// 期限別分布データのみを取得する関数
-export async function getExpiryDistribution(): Promise<
-  Array<{ name: string; value: number; color: string }>
-> {
-  const session = await getServerSession();
-  if (!session || !session.user) redirect("/login");
-
-  const todayStart = getStartOfDay(new Date());
-  const threeDaysLater = getEndOfDaysLater(3);
-  const sevenDaysLater = getEndOfDaysLater(7);
-  const thirtyDaysLater = getEndOfDaysLater(30);
-
-  const [expired, expiringSoon, warning, midTerm, longTerm] = await Promise.all(
-    [
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { lt: todayStart },
-        },
-      }),
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { gte: todayStart, lte: threeDaysLater },
-        },
-      }),
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { gt: threeDaysLater, lte: sevenDaysLater },
-        },
-      }),
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { gt: sevenDaysLater, lte: thirtyDaysLater },
-        },
-      }),
-      prisma.food.count({
-        where: {
-          userId: session.user.id,
-          isConsumed: false,
-          expiryDate: { gt: thirtyDaysLater },
-        },
-      }),
-    ],
-  );
-
-  return [
-    { name: "期限切れ", value: expired, color: "#ef5350" },
-    { name: "期限間近（3日以内）", value: expiringSoon, color: "#ff9800" },
-    { name: "要注意（4〜7日）", value: warning, color: "#ffb74d" },
-    { name: "8日〜30日", value: midTerm, color: "#42a5f5" },
-    { name: "1ヶ月以上", value: longTerm, color: "#388e3c" },
-  ];
-}
-
-export async function getFoodsByExpiry() {
-  const session = await getServerSession();
-  if (!session || !session.user) redirect("/login");
-
-  const [expiredFoods, expiringFoods, warningFoods] = await Promise.all([
-    getExpiredFoods(),
-    getExpiringFoods(3),
-    getWarningFoods(),
-  ]);
-
-  return { expiredFoods, expiringFoods, warningFoods };
-}
-
-export async function getCategoryStats() {
-  const session = await getServerSession();
-
-  if (!session || !session.user) {
-    redirect("/login");
-  }
-
-  try {
-    const categoryStats = await prisma.category.findMany({
-      include: {
-        foods: {
-          where: {
-            userId: session.user.id,
-            isConsumed: false,
-          },
-          select: {
-            id: true,
-          },
-        },
-      },
-      orderBy: {
-        name: "asc",
-      },
-    });
-
-    const formattedStats = categoryStats.map((category) => ({
-      id: category.id,
-      name: category.name,
-      count: category.foods.length,
-      color: category.color || "#6B7280",
-      description: category.description || "",
+    // ✅ 3: 期限分布を計算（DBクエリ不要）
+    const expiryDistribution = FOOD_STATUSES_BY_PRIORITY.map((status) => ({
+      name: status.label,
+      description: status.shortLabel, // 日数範囲を追加
+      value: foodLists[status.id].length,
+      color: status.chartColor,
     }));
 
-    console.log(`✅ カテゴリー統計を${formattedStats.length}件取得しました`);
-    return formattedStats;
+    // ✅ 4: カテゴリー統計を計算（Mapで効率化）
+    console.time("カテゴリー集計");
+    const categoryMap = new Map<
+      string,
+      {
+        id: string;
+        name: string;
+        count: number;
+        color: string;
+      }
+    >();
+
+    allFoods.forEach((food) => {
+      const categoryId = food.category.id;
+      const existing = categoryMap.get(categoryId);
+
+      if (existing) {
+        existing.count++;
+      } else {
+        categoryMap.set(categoryId, {
+          id: categoryId,
+          name: food.category.name,
+          count: 1,
+          color: food.category.color || "#6B7280",
+        });
+      }
+    });
+
+    const categoryStats = Array.from(categoryMap.values()).sort(
+      (a, b) => b.count - a.count,
+    );
+    console.timeEnd("カテゴリー集計");
+
+    return {
+      foodLists,
+      expiryDistribution,
+      categoryStats,
+      totalFoodCount,
+    };
   } catch (error) {
-    console.error("❌ カテゴリー統計の取得に失敗:", error);
-    return [];
+    console.error("❌ ダッシュボードデータ取得エラー:", error);
+    throw new Error("食品データの取得に失敗しました。");
   }
 }
