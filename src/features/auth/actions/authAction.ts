@@ -8,9 +8,10 @@ import bcrypt from "bcryptjs";
 import { signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { env } from "@/env";
-import { UserCreate } from "@/lib/user/user-data-fetcher";
 
 import { loginSchema, signupSchema } from "../validations/auth-schema";
+
+import { UserCreate } from "@/lib/user/user-data-fetcher";
 
 export const LoginAction = async (_: unknown, formData: FormData) => {
   const redirectTo = formData.get("redirect_to")?.toString() || "/dashboard";

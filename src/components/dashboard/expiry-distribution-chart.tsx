@@ -16,28 +16,6 @@ export function ExpiryDistributionChart({
   defaultExpanded = true,
 }: ExpiryDistributionChartProps) {
   const total = calculateTotal(data);
-
-  if (total === 0) {
-    return (
-      <SectionAccordion
-        defaultExpanded={defaultExpanded}
-        description="食品の期限別分布"
-        icon={<span>📆</span>}
-        iconBgColor="blue"
-        showBadge={false}
-        title="期限別分布"
-      >
-        <div className="text-center py-6">
-          <div className="text-4xl mb-3">📊</div>
-          <p className="text-gray-700 font-medium">データがありません</p>
-          <p className="text-gray-500 text-sm mt-1">
-            食品を登録するとグラフが表示されます
-          </p>
-        </div>
-      </SectionAccordion>
-    );
-  }
-
   const listItems = calculateListItems(data, total);
 
   return (
