@@ -32,7 +32,7 @@ vi.mock("bcryptjs", () => ({
   },
 }));
 
-vi.mock("@/lib/user/user-data-fetcher", () => ({
+vi.mock("@/server/user/dal/user-data-fetcher", () => ({
   UserCreate: UserCreateMock,
 }));
 
