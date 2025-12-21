@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import { signIn } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { env } from "@/env";
-import { UserCreate } from "@/lib/user/user-data-fetcher";
+import { UserCreate } from "@/server/user/dal/user-data-fetcher";
 
 import { loginSchema, signupSchema } from "../validations/auth-schema";
 

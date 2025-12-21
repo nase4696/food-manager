@@ -2,7 +2,7 @@ import "server-only";
 
 import type { User } from "@prisma/client";
 
-import { prisma } from "../prisma";
+import { prisma } from "@/lib/prisma";
 
 function UserDTO(user: User) {
   return {

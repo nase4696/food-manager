@@ -1,0 +1,10 @@
+{
+  "prisma.prisma6Mode": false,
+  "prisma.prisma6Compatibility": false,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  },
+  "files.associations": {
+    "*.prisma": "prisma"
+  }
+}

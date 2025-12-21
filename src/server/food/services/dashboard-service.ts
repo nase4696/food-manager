@@ -5,6 +5,8 @@ import {
   type FoodStatusId,
 } from "@/constants/food-status";
 import type { CategoryStat } from "@/types/category";
+import { withErrorHandling } from "@/lib/error/error-handler";
+import { ErrorTestingService } from "@/lib/dev/error-testing";
 
 import {
   findAllFoodsByUserId,
@@ -12,6 +14,30 @@ import {
   type FoodRaw,
   type FoodDisplay,
 } from "../dal/food-repository";
+
+function createEmptyDashboardData() {
+  const foodLists = Object.fromEntries(
+    FOOD_STATUSES_BY_PRIORITY.map((status): [FoodStatusId, FoodDisplay[]] => [
+      status.id,
+      [],
+    ]),
+  ) as Record<FoodStatusId, FoodDisplay[]>;
+
+  const expiryDistribution = FOOD_STATUSES_BY_PRIORITY.map((status) => ({
+    name: status.label,
+    description: status.shortLabel,
+    value: 0,
+    color: status.chartColor,
+  }));
+
+  return {
+    foodLists,
+    expiryDistribution,
+    categoryDistribution: [],
+    isEmpty: true,
+    totalFoodCount: 0,
+  };
+}
 
 export function calculateCategoryStats(foods: FoodRaw[]): CategoryStat[] {
   const categoryMap = new Map<string, CategoryStat>();
@@ -86,24 +112,36 @@ function createCategoryDistribution(categoryStats: CategoryStat[]) {
 }
 
 export async function getDashboardData() {
-  try {
-    const rawFoods = await findAllFoodsByUserId();
-    const allFoods = rawFoods.map(toFoodDisplay);
+  return withErrorHandling(
+    "getDashboardData",
+    async () => {
+      ErrorTestingService.throwForcedErrorIfNeeded();
 
-    const foodLists = createFoodLists(allFoods);
-    const expiryDistribution = createExpiryDistribution(foodLists);
-    const categoryStats = calculateCategoryStats(rawFoods);
-    const categoryDistribution = createCategoryDistribution(categoryStats);
+      const rawFoods = await findAllFoodsByUserId();
 
-    return {
-      foodLists,
-      expiryDistribution,
-      categoryStats,
-      categoryDistribution,
-      totalFoodCount: allFoods.length,
-    };
-  } catch (error) {
-    console.error("ダッシュボードエラー:", error);
-    throw new Error("食品データの読み込みに失敗しました");
-  }
+      if (rawFoods.length === 0) {
+        return createEmptyDashboardData();
+      }
+
+      const allFoods = rawFoods.map(toFoodDisplay);
+      const foodLists = createFoodLists(allFoods);
+      const expiryDistribution = createExpiryDistribution(foodLists);
+      const categoryStats = calculateCategoryStats(rawFoods);
+      const categoryDistribution = createCategoryDistribution(categoryStats);
+
+      return {
+        foodLists,
+        expiryDistribution,
+        categoryStats,
+        categoryDistribution,
+        totalFoodCount: allFoods.length,
+        isEmpty: false,
+      };
+    },
+    {
+      timestamp: new Date().toISOString(),
+      dataSource: "prisma",
+      operation: "read",
+    },
+  );
 }

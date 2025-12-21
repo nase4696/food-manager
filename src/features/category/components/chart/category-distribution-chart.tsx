@@ -5,7 +5,6 @@ import {
   calculateListItems,
   calculateTotal,
 } from "@/lib/utils/chart-calculations";
-import { EmptyState } from "@/components/charts/empty-state";
 
 import { CategoryStats } from "../category-stats";
 import { TotalDisplay } from "../total-display";
@@ -21,28 +20,7 @@ export function CategoryDistributionChart({
   defaultExpanded = true,
 }: CategoryDistributionChartProps) {
   const total = calculateTotal(data);
-
-  if (data.length === 0) {
-    return (
-      <SectionAccordion
-        defaultExpanded={defaultExpanded}
-        description="食品のカテゴリー別分布"
-        icon={<span>📊</span>}
-        iconBgColor="purple"
-        showBadge={false}
-        title="カテゴリー分布グラフ"
-      >
-        <EmptyState
-          description="食品を登録するとグラフが表示されます"
-          icon="📊"
-          title="データがありません"
-        />
-      </SectionAccordion>
-    );
-  }
-
   const mostCommonCategory = findMostCommonCategory(data)!;
-
   const listItems = calculateListItems(data, total);
 
   return (

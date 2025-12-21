@@ -4,6 +4,7 @@ import { FoodSection } from "@/components/dashboard/food-section";
 import { CategoryDistributionChart } from "@/features/category/components/chart/category-distribution-chart";
 import { FOOD_STATUSES_BY_PRIORITY } from "@/constants/food-status";
 import { DASHBOARD_CONFIG } from "@/constants/dashboard";
+import { EmptyDashboardState } from "@/components/dashboard/empty-dashboard-state";
 
 function measurePerformance() {
   if (process.env.NODE_ENV === "development") {
@@ -16,10 +17,14 @@ function measurePerformance() {
 export default async function DashboardPage() {
   const endMeasurement = measurePerformance();
 
-  const { foodLists, expiryDistribution, categoryDistribution } =
+  const { foodLists, expiryDistribution, categoryDistribution, isEmpty } =
     await getDashboardData();
 
   endMeasurement();
+
+  if (isEmpty) {
+    return <EmptyDashboardState />;
+  }
 
   return (
     <div className="min-h-screen p-2 md:p-6 space-y-4 md:space-y-6">
