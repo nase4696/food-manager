@@ -1,22 +1,24 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { Icons } from "@/components/icon";
 import { LoadingButton } from "@/components/ui/button/loading-button";
 
-export function OAuthButtons() {
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect_to") || "/dashboard";
+type OAuthButtonsProps = {
+  redirectTo?: string;
+};
+
+export function OAuthButtons({ redirectTo }: OAuthButtonsProps) {
+  const resolvedRedirectTo = redirectTo || "/dashboard";
   const [isLoading, setIsLoading] = useState<"google" | "github" | null>(null);
 
   const handleOAuthSignIn = async (provider: "google" | "github") => {
     setIsLoading(provider);
     try {
       await signIn(provider, {
-        callbackUrl: redirectTo,
+        callbackUrl: resolvedRedirectTo,
       });
     } catch (error) {
       console.error(`${provider} login error:`, error);

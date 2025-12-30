@@ -11,7 +11,14 @@ import {
 import { LoginForm } from "@/features/auth/components/login-form";
 import { OAuthButtons } from "@/features/auth/components/oauth-button";
 
-export default function Login() {
+type LoginPageProps = {
+  searchParams?: {
+    redirect_to?: string;
+  };
+};
+
+export default function Login({ searchParams }: LoginPageProps) {
+  const redirectTo = searchParams?.redirect_to || "/dashboard";
   return (
     <div className="container mx-auto h-auto flex items-center justify-center py-4 md:py-12 px-2 md:px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
@@ -22,7 +29,7 @@ export default function Login() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <OAuthButtons />
+          <OAuthButtons redirectTo={redirectTo} />
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
@@ -33,7 +40,7 @@ export default function Login() {
               </span>
             </div>
           </div>
-          <LoginForm />
+          <LoginForm redirectTo={redirectTo} />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-muted-foreground text-center">
