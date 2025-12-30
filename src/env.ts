@@ -25,6 +25,13 @@ export const env = createEnv({
     FORCE_ERROR_TYPE: z
       .enum(["", "network", "server", "database", "validation"])
       .optional(),
+
+    // Sentry
+    SENTRY_ENABLED: z.enum(["true", "false"]).optional(),
+    SENTRY_DSN: z.string().url().optional(),
+    SENTRY_ENVIRONMENT: z.string().optional(),
+    SENTRY_DEBUG: z.enum(["true", "false"]).optional(),
+    SENTRY_RELEASE: z.string().optional(),
   },
 
   client: {
@@ -48,6 +55,11 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     FORCE_ERROR_TYPE: process.env.FORCE_ERROR_TYPE,
+    SENTRY_ENABLED: process.env.SENTRY_ENABLED,
+    SENTRY_DSN: process.env.SENTRY_DSN,
+    SENTRY_ENVIRONMENT: process.env.SENTRY_ENVIRONMENT,
+    SENTRY_DEBUG: process.env.SENTRY_DEBUG,
+    SENTRY_RELEASE: process.env.SENTRY_RELEASE,
 
     // クライアントサイド
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,

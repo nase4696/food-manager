@@ -43,3 +43,47 @@ jobs:
 
       - name: Run Storybook Tests
         run: npm run test:storybook
+
+  sentry-release:
+    needs: quality-checks
+    if: github.ref == 'refs/heads/main' # mainブランチのみ
+    runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 全履歴を取得（リリース用）
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build with sourcemaps
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SENTRY_DSN: ${{ secrets.NEXT_PUBLIC_SENTRY_DSN }}
+          SENTRY_RELEASE: ${{ github.sha }}
+
+      - name: Create Sentry release
+        uses: getsentry/action-release@v1
+        with:
+          environment: production
+          sourcemaps: |
+            .next/static/chunks
+            .next/static/css
+          set_commits: auto
+          projects: ${{ secrets.SENTRY_PROJECT }}
+          version: ${{ github.sha }}
+
+      - name: Deploy notification
+        run: |
+          echo "Deployment to Sentry complete for ${{ github.sha }}"

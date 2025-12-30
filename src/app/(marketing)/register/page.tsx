@@ -11,7 +11,16 @@ import {
 import { SignupForm } from "@/features/auth/components/signup-form";
 import { OAuthButtons } from "@/features/auth/components/oauth-button";
 
-export default function Register() {
+type RegisterPageProps = {
+  searchParams?: {
+    redirect_to?: string;
+  };
+};
+
+export default function Register({ searchParams }: RegisterPageProps) {
+  const redirectTo = searchParams?.redirect_to;
+  const oauthRedirectTo = redirectTo || "/dashboard";
+  const signupRedirectTo = redirectTo || "/home";
   return (
     <div className="container mx-auto h-auto flex items-center justify-center py-4 md:py-12 px-2 md:px-4 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
@@ -22,7 +31,7 @@ export default function Register() {
           </CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4">
-          <OAuthButtons />
+          <OAuthButtons redirectTo={oauthRedirectTo} />
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <span className="w-full border-t" />
@@ -33,7 +42,7 @@ export default function Register() {
               </span>
             </div>
           </div>
-          <SignupForm />
+          <SignupForm redirectTo={signupRedirectTo} />
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
           <div className="text-sm text-muted-foreground text-center">

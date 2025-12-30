@@ -11,8 +11,12 @@ import { PasswordInput } from "@/components/ui/input/password-input";
 
 import { useSignupLogic } from "../hooks/use-signup-logic";
 
-export function SignupForm() {
-  const { pending, state, formAction } = useSignupLogic();
+type SignupFormProps = {
+  redirectTo?: string;
+};
+
+export function SignupForm({ redirectTo }: SignupFormProps) {
+  const { from, pending, state, formAction } = useSignupLogic(redirectTo);
 
   const [form, fields] = useForm({
     lastResult: state,
@@ -24,6 +28,7 @@ export function SignupForm() {
 
   return (
     <form {...getFormProps(form)} action={formAction} className="space-y-4">
+      <input name="redirect_to" type="hidden" value={from} />
       <div>
         <Label htmlFor={fields.name.id}>ユーザー名</Label>
         <Input {...getInputProps(fields.name, { type: "text" })} />

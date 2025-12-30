@@ -6,6 +6,8 @@ import { FOOD_STATUSES_BY_PRIORITY } from "@/constants/food-status";
 import { DASHBOARD_CONFIG } from "@/constants/dashboard";
 import { EmptyDashboardState } from "@/components/dashboard/empty-dashboard-state";
 
+export const dynamic = "force-dynamic";
+
 function measurePerformance() {
   if (process.env.NODE_ENV === "development") {
     console.time("ダッシュボードページ読み込み");

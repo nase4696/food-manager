@@ -11,8 +11,12 @@ import { PasswordInput } from "@/components/ui/input/password-input";
 
 import { useLoginLogic } from "../hooks/use-login-logic";
 
-export function LoginForm() {
-  const { from, pending, state, formAction } = useLoginLogic();
+type LoginFormProps = {
+  redirectTo?: string;
+};
+
+export function LoginForm({ redirectTo }: LoginFormProps) {
+  const { from, pending, state, formAction } = useLoginLogic(redirectTo);
 
   const [form, fields] = useForm({
     lastResult: state,
